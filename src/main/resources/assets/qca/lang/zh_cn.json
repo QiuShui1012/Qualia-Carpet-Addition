@@ -1,0 +1,16 @@
+{
+  "carpet.category.qca": "QCA",
+
+  "carpet.rule.commandTpPos.name": "/tppos 命令",
+  "carpet.rule.commandTpPos.desc": "/tp 命令，但是只能将一个实体传送到一个坐标。",
+  "carpet.rule.tallPlantShearToSmall.name": "高植物可剪成其小型变种",
+  "carpet.rule.tallPlantShearToSmall.desc": "允许玩家将高植物剪成或与剪刀制作为它们的小型“变种”。注意此处的“变种”仅为游戏内相似用途的合并，与现实中的植物无关系。",
+  "carpet.rule.breakDripleafKeepStem.name": "挖掘大型垂滴叶保留茎",
+  "carpet.rule.breakDripleafKeepStem.desc": "更改大型垂滴叶茎在顶部被破坏时的行为。\n现在，当顶部的垂滴叶被破坏时，最靠上的茎会变成垂滴叶并保持其它茎不被破坏。",
+  "carpet.rule.tooExpensiveLevel.name": "“过于昂贵”累计惩罚等级",
+  "carpet.rule.tooExpensiveLevel.desc": "更改在铁砧中触发“过于昂贵”提示的累计惩罚等级。",
+  "carpet.rule.repairCostMultiplier.name": "累计惩罚乘数",
+  "carpet.rule.repairCostMultiplier.desc": "设置计算下个累计惩罚的乘数。",
+  "carpet.rule.itemsCanPassThroughChains.name": "物品可穿过铁链",
+  "carpet.rule.itemsCanPassThroughChains.desc": "允许物品实体穿过铁链。对于其它实体，碰撞箱与关闭该规则时无差异。"
+}

@@ -1,0 +1,39 @@
+[versions]
+
+# Enviroment Properties
+minecraft = "1.21.3"
+fabric-loader = "0.16.9"
+
+mappings-yarn = "1.21.3+build.2"
+
+# Mod Properties
+version = "1.0.0"
+group = "zh.qiushui.mod"
+archives-name = "qca"
+
+# Dependency Properties
+fabric-api = "0.110.0+1.21.3"
+fabric-carpet = "5834860"
+
+lombok = "1.18.30"
+
+# Gradle Plugin Properties
+fabric-loom = "1.8-SNAPSHOT"
+
+[libraries]
+
+# Common
+minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
+
+# Fabric
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
+mappings-yarn = { group = "net.fabricmc", name = "yarn", version.ref = "mappings-yarn" }
+
+# Carpet
+fabric-carpet = { group = "curse.maven", name = "carpet-349239", version.ref = "fabric-carpet" }
+
+[plugins]
+
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }

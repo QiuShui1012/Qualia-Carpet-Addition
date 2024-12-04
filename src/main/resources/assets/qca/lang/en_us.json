@@ -1,0 +1,13 @@
+{
+  "carpet.category.qca": "QCA",
+
+  "carpet.rule.commandTpPos.name": "/tppos Command",
+  "carpet.rule.commandTpPos.desc": "The /tp command, but only can teleport an entity to a position.",
+  "carpet.rule.tallPlantShearToSmall.name": "Tall Plant Shear To Small",
+  "carpet.rule.tallPlantShearToSmall.desc": "Allows players to shear off tall plants or craft them with shears to create their smaller \"variants.\"\nNote that these \"variants\" are purely for in-game use and have no relation to real-life plants.",
+  "carpet.rule.breakDripleafKeepStem.name": "Break Dripleaf Keep Stem",
+  "carpet.rule.breakDripleafKeepStem.desc": "Changes the behaviour of the stems when top break.\nNow, when the top dripleaf break, the top stem will become dripleaf and keep other stems.",
+  "carpet.rule.tooExpensiveLevel.desc": "Changes the repair cost level that can trigger the \"Too Expensive!\" tip in anvil.",
+  "carpet.rule.repairCostMultiplier.desc": "Sets the multiplier in calculating next repair cost.",
+  "carpet.rule.itemsCanPassThroughChains.desc": "Allows the item entities pass through chains.\nFor other entities, there is no difference between the collision box and when the rule is closed."
+}
