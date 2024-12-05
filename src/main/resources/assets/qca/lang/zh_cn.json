@@ -12,5 +12,7 @@
   "carpet.rule.repairCostMultiplier.name": "累计惩罚乘数",
   "carpet.rule.repairCostMultiplier.desc": "设置计算下个累计惩罚的乘数。",
   "carpet.rule.itemsCanPassThroughChains.name": "物品可穿过铁链",
-  "carpet.rule.itemsCanPassThroughChains.desc": "允许物品实体穿过铁链。对于其它实体，碰撞箱与关闭该规则时无差异。"
+  "carpet.rule.itemsCanPassThroughChains.desc": "允许物品实体穿过铁链。对于其它实体，碰撞箱与关闭该规则时无差异。",
+  "carpet.rule.easierHopperRestriction.name": "更简易的漏斗限类",
+  "carpet.rule.easierHopperRestriction.desc": "允许玩家通过重命名漏斗使其仅吸取某类物品。\n支持长ID（“namespace:path”为物品，“#namespace:path”为标签）以及短ID（前文提到的“path”和“#path”部分，仅支持命名空间为minecraft）。"
 }

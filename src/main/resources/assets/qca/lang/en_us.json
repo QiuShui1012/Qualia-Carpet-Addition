@@ -9,5 +9,6 @@
   "carpet.rule.breakDripleafKeepStem.desc": "Changes the behaviour of the stems when top break.\nNow, when the top dripleaf break, the top stem will become dripleaf and keep other stems.",
   "carpet.rule.tooExpensiveLevel.desc": "Changes the repair cost level that can trigger the \"Too Expensive!\" tip in anvil.",
   "carpet.rule.repairCostMultiplier.desc": "Sets the multiplier in calculating next repair cost.",
-  "carpet.rule.itemsCanPassThroughChains.desc": "Allows the item entities pass through chains.\nFor other entities, there is no difference between the collision box and when the rule is closed."
+  "carpet.rule.itemsCanPassThroughChains.desc": "Allows the item entities pass through chains.\nFor other entities, there is no difference between the collision box and when the rule is closed.",
+  "carpet.rule.easierHopperRestriction.desc": "Allow players to rename the hopper to only extract certain types of items.\nSupport long ID (\"namespace:path\" for items or \"#namespace:path\" for tags) and short ID (\"path\" or \"#path\" mentioned earlier, only supports namespace minecraft)."
 }

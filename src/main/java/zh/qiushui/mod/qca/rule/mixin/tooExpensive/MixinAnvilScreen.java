@@ -10,6 +10,6 @@ import zh.qiushui.mod.qca.QcaSettings;
 public class MixinAnvilScreen {
     @ModifyConstant(method = "drawForeground", constant = @Constant(intValue = 40))
     private int modifyTooExpensiveLevel(int constant) {
-        return QcaSettings.tooExpensiveLevel;
+        return QcaSettings.getTooExpensiveLevel();
     }
 }

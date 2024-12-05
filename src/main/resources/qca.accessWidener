@@ -3,3 +3,4 @@ accessible method net/minecraft/server/command/TeleportCommand teleport (Lnet/mi
 extendable method net/minecraft/entity/Entity checkBlockCollision (Ljava/util/List;Ljava/util/Set;)V
 accessible class net/minecraft/entity/Entity$QueuedCollisionCheck
 accessible field net/minecraft/entity/Entity collidedBlocks Ljava/util/Set;
+accessible field net/minecraft/block/entity/HopperBlockEntity inventory Lnet/minecraft/util/collection/DefaultedList;

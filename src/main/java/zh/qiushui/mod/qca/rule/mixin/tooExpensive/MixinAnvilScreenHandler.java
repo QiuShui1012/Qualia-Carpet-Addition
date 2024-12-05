@@ -13,17 +13,17 @@ import zh.qiushui.mod.qca.QcaSettings;
 public class MixinAnvilScreenHandler {
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 40, ordinal = 1))
     private int modifySecondForty(int constant) {
-        return QcaSettings.tooExpensiveLevel + 1;
+        return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 39))
     private int modifyThirtyNine(int constant) {
-        return QcaSettings.tooExpensiveLevel;
+        return QcaSettings.getTooExpensiveLevel();
     }
 
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 40, ordinal = 2))
     private int modifyThirdForty(int constant) {
-        return QcaSettings.tooExpensiveLevel + 1;
+        return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @Inject(method = "getNextCost", at = @At("HEAD"), cancellable = true)

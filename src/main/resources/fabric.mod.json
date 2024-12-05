@@ -19,6 +19,11 @@
 			"zh.qiushui.mod.qca.QcaExtension"
 		]
 	},
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_2614": ["zh/qiushui/mod/qca/rule/util/Restrictable"]
+		}
+	},
 	"accessWidener": "qca.accessWidener",
 	"mixins": [
 		"qca.mixins.json"

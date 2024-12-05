@@ -66,6 +66,10 @@ public class QcaSettings {
     )
     public static int tooExpensiveLevel = 39;
 
+    public static int getTooExpensiveLevel() {
+        return tooExpensiveLevel == -1 ? Integer.MAX_VALUE - 1 : tooExpensiveLevel;
+    }
+
     @Rule(
             categories = {QCA, FEATURE, EXPERIMENTAL}
     )
@@ -75,4 +79,9 @@ public class QcaSettings {
             categories = {QCA, FEATURE, EXPERIMENTAL}
     )
     public static boolean itemsCanPassThroughChains = false;
+
+    @Rule(
+            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+    )
+    public static boolean easierHopperRestriction = false;
 }
