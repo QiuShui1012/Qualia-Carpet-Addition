@@ -25,7 +25,7 @@ import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 @Mixin(ShearsItem.class)
 public abstract class MixinShearsItem {
     @Inject(method = "useOnBlock", at = @At(value = "TAIL"), cancellable = true)
-    private void checkForTallPlant(
+    private void qca_checkForTallPlant(
             ItemUsageContext ctx, CallbackInfoReturnable<ActionResult> cir
     ) {
         World world = ctx.getWorld();
@@ -36,16 +36,16 @@ public abstract class MixinShearsItem {
 
         switch (QcaSettings.matchTallPlant(block)) {
             case 1, 3 -> cir.setReturnValue(
-                    shearTallPlant(ctx, world, pos, block, state.get(Properties.DOUBLE_BLOCK_HALF))
+                    qca_shearTallPlant(ctx, world, pos, block, state.get(Properties.DOUBLE_BLOCK_HALF))
             );
             case 2 -> cir.setReturnValue(
-                    shearBigDripleaf(ctx, world, pos, block)
+                    qca_shearBigDripleaf(ctx, world, pos, block)
             );
         }
     }
 
     @Unique
-    private static ActionResult shearTallPlant(
+    private static ActionResult qca_shearTallPlant(
             ItemUsageContext ctx, World world, BlockPos pos,
             Block plant, DoubleBlockHalf half
     ) {
@@ -83,7 +83,7 @@ public abstract class MixinShearsItem {
     }
 
     @Unique
-    private static ActionResult shearBigDripleaf(ItemUsageContext ctx, World world, BlockPos pos, Block plant) {
+    private static ActionResult qca_shearBigDripleaf(ItemUsageContext ctx, World world, BlockPos pos, Block plant) {
         Block small = PlantTransformUtil.SMALL_TALL_PLANTS.inverse().get(plant).getFirst();
 
         PlayerEntity player = ctx.getPlayer();

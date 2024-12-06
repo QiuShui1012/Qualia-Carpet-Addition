@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "breakDripleafKeepStem.MixinBigDripleafStemBlock",
+    "crafterRecipeCanRestrict.MixinCrafterBlock",
     "easyHopperRestriction.MixinHopperBlockEntity",
     "itemsCanPassThroughChains.MixinChainBlock",
     "tallPlantShearToSmall.MixinShearsItem",

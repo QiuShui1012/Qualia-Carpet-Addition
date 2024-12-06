@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.util;
+package zh.qiushui.mod.qca.rule.util.restriction;
 
 import net.minecraft.item.ItemStack;
 

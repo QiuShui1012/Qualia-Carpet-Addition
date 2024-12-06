@@ -12,22 +12,22 @@ import zh.qiushui.mod.qca.QcaSettings;
 @Mixin(AnvilScreenHandler.class)
 public class MixinAnvilScreenHandler {
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 40, ordinal = 1))
-    private int modifySecondForty(int constant) {
+    private int qca_modifySecondForty(int constant) {
         return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 39))
-    private int modifyThirtyNine(int constant) {
+    private int qca_modifyThirtyNine(int constant) {
         return QcaSettings.getTooExpensiveLevel();
     }
 
     @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 40, ordinal = 2))
-    private int modifyThirdForty(int constant) {
+    private int qca_modifyThirdForty(int constant) {
         return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @Inject(method = "getNextCost", at = @At("HEAD"), cancellable = true)
-    private static void modifyMultiplier(int i, CallbackInfoReturnable<Integer> cir) {
+    private static void qca_modifyMultiplier(int i, CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(
                 Math.max(
                         0, (int) Math.ceil(Math.min(

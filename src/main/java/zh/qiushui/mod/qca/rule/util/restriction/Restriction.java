@@ -1,8 +1,5 @@
-package zh.qiushui.mod.qca.rule.util;
+package zh.qiushui.mod.qca.rule.util.restriction;
 
-import com.google.common.collect.Lists;
-import lombok.Setter;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -10,10 +7,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import zh.qiushui.mod.qca.QcaExtension;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 public class Restriction {
@@ -47,6 +43,9 @@ public class Restriction {
         }
     }
 
+    public void setRestrictor(@NotNull Item restrictor) {
+        this.restrictor = value -> value.equals(restrictor);
+    }
     public void setRestrictor(@Nullable String idRaw) {
         if (idRaw != null) {
             if (idRaw.startsWith("#")) {

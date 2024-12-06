@@ -84,4 +84,9 @@ public class QcaSettings {
             categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean easierHopperRestriction = false;
+
+    @Rule(
+            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+    )
+    public static boolean crafterRecipeCanRestrict = false;
 }

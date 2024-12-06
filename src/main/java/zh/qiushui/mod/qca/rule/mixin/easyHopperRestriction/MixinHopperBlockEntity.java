@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zh.qiushui.mod.qca.QcaSettings;
-import zh.qiushui.mod.qca.rule.util.Restrictable;
-import zh.qiushui.mod.qca.rule.util.Restriction;
+import zh.qiushui.mod.qca.rule.util.restriction.Restrictable;
+import zh.qiushui.mod.qca.rule.util.restriction.Restriction;
 
 import java.util.Objects;
 
