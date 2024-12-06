@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.command.commandTpPos;
+package zh.qiushui.mod.qca.command.commandsTp;
 
 import carpet.utils.CommandHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -7,6 +7,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.PosArgument;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -21,7 +22,7 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Set;
 
-public class TpPosCommand {
+public class TpCommands {
     public static void register(@NotNull CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
                 CommandManager.literal("tppos")
@@ -35,13 +36,36 @@ public class TpPosCommand {
                         .then(CommandManager.argument("target", EntityArgumentType.entity())
                                       .then(CommandManager.argument("location", Vec3ArgumentType.vec3())
                                                       .executes(
-                                                              commandContext -> execute(
-                                                                      commandContext.getSource(),
-                                                                      EntityArgumentType.getEntity(commandContext, "target"),
-                                                                      commandContext.getSource().getWorld(),
-                                                                      Vec3ArgumentType.getPosArgument(commandContext, "location")
+                                                              context -> execute(
+                                                                      context.getSource(),
+                                                                      EntityArgumentType.getEntity(context, "target"),
+                                                                      context.getSource().getWorld(),
+                                                                      Vec3ArgumentType.getPosArgument(context, "location")
                                                               )
                                                       )))
+        );
+        dispatcher.register(
+                CommandManager.literal("tpplayer")
+                        .requires(source -> CommandHelper.canUseCommand(source, QcaSettings.commandTpPlayer))
+                        .then(CommandManager.argument("destination", EntityArgumentType.player())
+                                      .executes(
+                                              ctx -> execute(
+                                                      ctx.getSource(), ctx.getSource().getPlayerOrThrow(),
+                                                      EntityArgumentType.getPlayer(ctx, "destination")
+                                              )
+                                      )
+                        )
+                        .then(CommandManager.argument("target", EntityArgumentType.player())
+                                      .then(CommandManager.argument("destination", EntityArgumentType.player())
+                                                    .executes(
+                                                            ctx -> execute(
+                                                                    ctx.getSource(),
+                                                                    EntityArgumentType.getPlayer(ctx, "target"),
+                                                                    EntityArgumentType.getPlayer(ctx, "destination")
+                                                            )
+                                                    )
+                                      )
+                        )
         );
     }
 
@@ -62,6 +86,25 @@ public class TpPosCommand {
                         formatFloat(vec3d.x),
                         formatFloat(vec3d.y),
                         formatFloat(vec3d.z)
+                ),
+                true
+        );
+
+        return 1;
+    }
+    private static int execute(ServerCommandSource source, PlayerEntity target, PlayerEntity destination) throws CommandSyntaxException {
+        TeleportCommand.teleport(
+                source, target, (ServerWorld) destination.getWorld(),
+                destination.getX(), destination.getY(), destination.getZ(),
+                EnumSet.noneOf(PositionFlag.class), destination.getYaw(), destination.getPitch(),
+                null
+        );
+
+        source.sendFeedback(
+                () -> Text.translatable(
+                        "commands.teleport.success.entity.single",
+                        target.getDisplayName(),
+                        destination.getDisplayName()
                 ),
                 true
         );

@@ -9,7 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zh.qiushui.mod.qca.command.commandTpPos.TpPosCommand;
+import zh.qiushui.mod.qca.command.commandsTp.TpCommands;
 import zh.qiushui.mod.qca.util.TranslationsUtil;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
 
 	@Override
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext) {
-		TpPosCommand.register(dispatcher);
+		TpCommands.register(dispatcher);
 	}
 
 	@Override

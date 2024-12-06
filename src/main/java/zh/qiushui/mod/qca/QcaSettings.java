@@ -19,6 +19,12 @@ public class QcaSettings {
             validators = Validators.CommandLevel.class
     )
     public static String commandTpPos = "ops";
+    @Rule(
+            categories = {QCA, COMMAND, EXPERIMENTAL},
+            options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
+            validators = Validators.CommandLevel.class
+    )
+    public static String commandTpPlayer = "ops";
 
     @Rule(
             categories = {QCA, FEATURE, EXPERIMENTAL}
