@@ -76,6 +76,7 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
     @Unique
     private static boolean qca_restrict(Inventory inventory, ItemStack stack) {
         return !QcaSettings.easierHopperRestriction
-               || inventory instanceof HopperBlockEntity hopper && hopper.qca_restrict(stack);
+               || !(inventory instanceof HopperBlockEntity hopper)
+               || hopper.qca_restrict(stack);
     }
 }
