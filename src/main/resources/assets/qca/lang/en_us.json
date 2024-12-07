@@ -13,5 +13,5 @@
   "carpet.rule.repairCostMultiplier.desc": "Sets the multiplier in calculating next repair cost.",
   "carpet.rule.itemsCanPassThroughChains.desc": "Allow item entities pass through chains.\nFor other entities, there is no difference between the collision box and when the rule is closed.",
   "carpet.rule.easierHopperRestriction.desc": "Allow players to rename the hopper to only extract certain types of items.\nSupport long ID (\"namespace:path\" for items or \"#namespace:path\" for tags) and short ID (\"path\" or \"#path\" mentioned earlier, only supports namespace minecraft).",
-  "carpet.rule.crafterRecipeCanRestrict.desc": "Allow players to limit recipes by placing (glow) item frame at the top of the crafter.\nAt this time, the crafter only support recipes for items within the (glow) item frame."
+  "carpet.rule.crafterRecipeCanRestrict.desc": "Allow players to limit recipes by placing (glow) item frame at the top of the crafter.\nAt this time, the crafter only support recipes for items within the (glow) item frame.\nNote that the \"top\" side means the side has nine-square grid."
 }

@@ -56,6 +56,10 @@ public class Restriction {
         }
     }
 
+    public void resetRestrictor() {
+        this.restrictor = null;
+    }
+
     public static Predicate<Item> parseTagRestrictor(String idRaw) {
         String idRawTrimmed = idRaw.substring(1);
         Identifier restrictorId = Identifier.tryParse(idRawTrimmed);

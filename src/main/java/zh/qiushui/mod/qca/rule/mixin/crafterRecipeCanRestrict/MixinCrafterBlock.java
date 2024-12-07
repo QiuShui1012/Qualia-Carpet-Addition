@@ -58,6 +58,8 @@ public abstract class MixinCrafterBlock {
                     this.restriction.setRestrictor(restrictor);
                 }
             }
+        } else {
+            this.restriction.resetRestrictor();
         }
     }
 
