@@ -24,7 +24,8 @@ dependencies {
 	minecraft libs.minecraft
 	mappings libs.mappings.yarn
 
-	implementation libs.lombok
+	compileOnly libs.lombok
+	annotationProcessor libs.lombok
 
 	modImplementation libs.fabric.loader
 
