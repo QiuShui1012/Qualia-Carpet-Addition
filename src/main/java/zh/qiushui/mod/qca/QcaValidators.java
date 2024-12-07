@@ -2,6 +2,7 @@ package zh.qiushui.mod.qca;
 
 import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Validator;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,7 @@ public class QcaValidators {
                 @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String s, String s2
         ) {
             String[] options = s.trim().split(",");
-            return OPTIONS.containsAll(Arrays.stream(options).toList()) ? s : null;
+            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : s;
         }
 
         @Override
@@ -37,6 +38,40 @@ public class QcaValidators {
         @Override
         public String description() {
             return "This value represents the maximum repair cost level at which an item is considered too expensive to repair in an anvil. Must be -1 or larger";
+        }
+    }
+
+    public static class BeaconIncreaseInteractionRangeMode extends Validator<String> {
+        private static final Set<String> MODES = ImmutableSet.of(
+                "add", "multiplyBase", "multiplyTotal",
+                "addWithoutLevel", "multiplyBaseWithoutLevel", "multiplyTotalWithoutLevel",
+                "false"
+        );
+
+        @Override
+        public String validate(
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String s, String s2
+        ) {
+            return !MODES.contains(s) ? null : s;
+        }
+
+        @Override
+        public String description() {
+            return "This value controls the mode of how to increase the value.\n\"addition\", \"multiplyBase\" and \"multiplyTotal\" are their literal meanings. \"WithoutLevel\" means it will ignore the beacon's level on calculate.";
+        }
+    }
+    public static class BeaconIncreaseInteractionRangeValue extends Validator<Double> {
+        @Override
+        public Double validate(
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<Double> carpetRule, Double aDouble,
+                String s
+        ) {
+            return (QcaSettings.beaconIncreaseIsEnabled() && aDouble < 0) ? 0 : aDouble;
+        }
+
+        @Override
+        public String description() {
+            return "This value represents the addend or multiplier will be used in calculate increase value. Rule beaconIncreaseInteractionRange must be enabled. Value must be positive.";
         }
     }
 }

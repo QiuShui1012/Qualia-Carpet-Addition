@@ -95,4 +95,45 @@ public class QcaSettings {
             categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean crafterRecipeCanRestrict = false;
+
+    @Rule(
+            categories = {QCA, FEATURE, EXPERIMENTAL},
+            options = {
+                    "add", "multiplyBase", "multiplyTotal",
+                    "addWithoutLevel", "multiplyBaseWithoutLevel", "multiplyTotalWithoutLevel",
+                    "false"
+            },
+            validators = QcaValidators.BeaconIncreaseInteractionRangeMode.class
+    )
+    public static String beaconIncreaseInteractionRange = "false";
+
+    public static boolean beaconIncreaseIsEnabled() {
+        return !beaconIncreaseInteractionRange.equals("false");
+    }
+    public static boolean beaconIncreaseModeIsAdd() {
+        return beaconIncreaseInteractionRange.contains("add");
+    }
+    public static boolean beaconIncreaseModeIsBase() {
+        return beaconIncreaseInteractionRange.contains("Base");
+    }
+    public static boolean beaconIncreaseModeIsWithoutLevel() {
+        return beaconIncreaseInteractionRange.contains("WithoutLevel");
+    }
+
+    @Rule(
+            categories = {QCA, FEATURE, EXPERIMENTAL},
+            validators = QcaValidators.BeaconIncreaseInteractionRangeValue.class
+    )
+    public static double beaconIncreaseInteractionRangeValue = 0.3;
+
+    public static double getBeaconIncreaseInteractionRangeValue(int level) {
+        boolean isAdd = beaconIncreaseModeIsAdd();
+        return beaconIncreaseModeIsWithoutLevel()
+               ? beaconIncreaseInteractionRangeValue
+               : (
+                       isAdd
+                       ? (level + beaconIncreaseInteractionRangeValue)
+                       : (level * beaconIncreaseInteractionRangeValue)
+               );
+    }
 }

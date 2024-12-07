@@ -3,6 +3,8 @@
   "package": "zh.qiushui.mod.qca.rule.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "beaconIncreaseInteractionRange.BeaconBlockEntityAccessor",
+    "beaconIncreaseInteractionRange.MixinBeaconBlockEntity",
     "breakDripleafKeepStem.MixinBigDripleafStemBlock",
     "crafterRecipeCanRestrict.MixinCrafterBlock",
     "easyHopperRestriction.MixinHopperBlockEntity",

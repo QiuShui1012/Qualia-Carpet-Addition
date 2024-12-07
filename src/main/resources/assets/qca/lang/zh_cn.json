@@ -18,5 +18,9 @@
   "carpet.rule.easierHopperRestriction.name": "更简易的漏斗限类",
   "carpet.rule.easierHopperRestriction.desc": "允许玩家通过重命名漏斗使其仅吸取某类物品。\n支持长ID（“namespace:path”为物品，“#namespace:path”为标签）以及短ID（前文提到的“path”和“#path”部分，仅支持命名空间为minecraft）。",
   "carpet.rule.crafterRecipeCanRestrict.name": "合成器配方可限制",
-  "carpet.rule.crafterRecipeCanRestrict.desc": "允许玩家通过在合成器顶部放置（荧光）物品展示框来限制配方。\n此时合成器仅支持结果为（荧光）物品展示框内物品的配方。\n注意此处的“顶部”指有九宫格的面。"
+  "carpet.rule.crafterRecipeCanRestrict.desc": "允许玩家通过在合成器顶部放置（荧光）物品展示框来限制配方。\n此时合成器仅支持结果为（荧光）物品展示框内物品的配方。\n注意此处的“顶部”指有九宫格的面。",
+  "carpet.rule.beaconIncreaseInteractionRange.name": "信标可提升玩家交互范围",
+  "carpet.rule.beaconIncreaseInteractionRange.desc": "允许信标当玩家在范围内时为其提升交互范围。",
+  "carpet.rule.beaconIncreaseInteractionRangeValue.name": "信标可提升玩家交互范围值",
+  "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "设置当规则“信标可提升玩家交互范围”不为“false”时，信标计算增加的交互范围时使用的值。"
 }
