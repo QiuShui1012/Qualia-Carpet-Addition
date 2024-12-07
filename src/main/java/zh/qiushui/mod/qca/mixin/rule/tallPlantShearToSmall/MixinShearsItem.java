@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.tallPlantShearToSmall;
+package zh.qiushui.mod.qca.mixin.rule.tallPlantShearToSmall;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

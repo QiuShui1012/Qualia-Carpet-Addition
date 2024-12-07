@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.crafterRecipeCanRestrict;
+package zh.qiushui.mod.qca.mixin.rule.crafterRecipeCanRestrict;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CrafterBlock;

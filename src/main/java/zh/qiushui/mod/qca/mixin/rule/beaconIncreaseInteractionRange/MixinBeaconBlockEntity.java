@@ -1,42 +1,52 @@
-package zh.qiushui.mod.qca.rule.mixin.beaconIncreaseInteractionRange;
+package zh.qiushui.mod.qca.mixin.rule.beaconIncreaseInteractionRange;
 
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeaconBlockEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.IncreaseInteractionRange;
-import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.InteractionRangeEntityAttributeModifiers;
+import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.PlayerUtil;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Mixin(BeaconBlockEntity.class)
-public abstract class MixinBeaconBlockEntity implements IncreaseInteractionRange {
-    @Shadow int level;
-    @Unique private final Set<PlayerEntity> increasedPlayers = Sets.newHashSet();
+public abstract class MixinBeaconBlockEntity extends BlockEntity implements IncreaseInteractionRange {
+    public MixinBeaconBlockEntity(
+            BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState
+    ) {
+        super(blockEntityType, blockPos, blockState);
+    }
 
     @Override
     public Set<PlayerEntity> qca_getIncreasedPlayers() {
-        return this.increasedPlayers;
+        return Objects.requireNonNullElseGet(
+                PlayerUtil.INCREASED_PLAYERS.get(this.pos),
+                () -> {
+                    PlayerUtil.INCREASED_PLAYERS.put(this.pos, Sets.newHashSet());
+                    return PlayerUtil.INCREASED_PLAYERS.get(this.pos);
+                }
+        );
     }
     @Override
     public void qca_addIncreasedPlayer(PlayerEntity player) {
-        this.increasedPlayers.add(player);
+        PlayerUtil.INCREASED_PLAYERS.get(this.pos).add(player);
     }
     @Override
     public void qca_removeIncreasedPlayer(PlayerEntity player) {
-        this.increasedPlayers.remove(player);
+        PlayerUtil.INCREASED_PLAYERS.get(this.pos).remove(player);
     }
 
     @Inject(
@@ -59,8 +69,8 @@ public abstract class MixinBeaconBlockEntity implements IncreaseInteractionRange
     }
     @Inject(method = "markRemoved", at = @At("TAIL"))
     private void qca_removeModifiersOfPlayers(CallbackInfo ci) {
-        for (PlayerEntity player : this.increasedPlayers) {
-            qca_removeModifierForPlayer(player, this.level);
+        for (PlayerEntity player : this.qca_getIncreasedPlayers()) {
+            PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
         }
     }
 
@@ -75,33 +85,18 @@ public abstract class MixinBeaconBlockEntity implements IncreaseInteractionRange
 
             for (PlayerEntity player : beacon.qca_getIncreasedPlayers()) {
                 if (!inRangeAndNeedIncreasePlayers.contains(player)) {
-                    qca_removeModifierForPlayer(player, level);
+                    PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
                     beacon.qca_removeIncreasedPlayer(player);
                     inRangeAndNeedIncreasePlayers.remove(player);
                 }
             }
 
             for (PlayerEntity player : inRangeAndNeedIncreasePlayers) {
-                qca_removeModifierForPlayer(player, level);
-                qca_addModifierForPlayer(player, level);
+                PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
+                PlayerUtil.addBeaconIncreaseModifiersForPlayer(player, level);
 
                 beacon.qca_addIncreasedPlayer(player);
             }
         }
-    }
-
-    @Unique
-    private static void qca_addModifierForPlayer(PlayerEntity player, int level) {
-        player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE)
-                .addPersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconBlockRangeModifier(level));
-        player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE)
-                .addPersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconEntityRangeModifier(level));
-    }
-    @Unique
-    private static void qca_removeModifierForPlayer(PlayerEntity player, int level) {
-        player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE)
-                .removeModifier(InteractionRangeEntityAttributeModifiers.getPreviousBeaconBlockRangeModifier(level));
-        player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE)
-                .removeModifier(InteractionRangeEntityAttributeModifiers.getPreviousBeaconEntityRangeModifier(level));
     }
 }

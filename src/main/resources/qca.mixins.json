@@ -1,21 +1,22 @@
 {
   "required": true,
-  "package": "zh.qiushui.mod.qca.rule.mixin",
+  "package": "zh.qiushui.mod.qca.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "beaconIncreaseInteractionRange.BeaconBlockEntityAccessor",
-    "beaconIncreaseInteractionRange.MixinBeaconBlockEntity",
-    "breakDripleafKeepStem.MixinBigDripleafStemBlock",
-    "crafterRecipeCanRestrict.MixinCrafterBlock",
-    "easyHopperRestriction.MixinHopperBlockEntity",
-    "itemsCanPassThroughChains.MixinChainBlock",
-    "tallPlantShearToSmall.MixinShearsItem",
-    "tooExpensive.MixinAnvilScreenHandler"
+    "rule.beaconIncreaseInteractionRange.BeaconBlockEntityAccessor",
+    "rule.beaconIncreaseInteractionRange.MixinBeaconBlockEntity",
+    "rule.beaconIncreaseInteractionRange.MixinServerPlayerEntity",
+    "rule.breakDripleafKeepStem.MixinBigDripleafStemBlock",
+    "rule.crafterRecipeCanRestrict.MixinCrafterBlock",
+    "rule.easyHopperRestriction.MixinHopperBlockEntity",
+    "rule.itemsCanPassThroughChains.MixinChainBlock",
+    "rule.tallPlantShearToSmall.MixinShearsItem",
+    "rule.tooExpensive.MixinAnvilScreenHandler"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "tooExpensive.MixinAnvilScreen"
+    "rule.tooExpensive.MixinAnvilScreen"
   ]
 }

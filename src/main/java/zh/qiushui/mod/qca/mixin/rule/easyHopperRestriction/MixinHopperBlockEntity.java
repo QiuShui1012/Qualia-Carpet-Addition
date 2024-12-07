@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.easyHopperRestriction;
+package zh.qiushui.mod.qca.mixin.rule.easyHopperRestriction;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;

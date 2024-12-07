@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.itemsCanPassThroughChains;
+package zh.qiushui.mod.qca.mixin.rule.itemsCanPassThroughChains;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.breakDripleafKeepStem;
+package zh.qiushui.mod.qca.mixin.rule.breakDripleafKeepStem;
 
 import net.minecraft.block.BigDripleafStemBlock;
 import net.minecraft.block.BlockState;

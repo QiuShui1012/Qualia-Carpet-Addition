@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.rule.mixin.tooExpensive;
+package zh.qiushui.mod.qca.mixin.rule.tooExpensive;
 
 import net.minecraft.screen.AnvilScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
