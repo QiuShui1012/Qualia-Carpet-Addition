@@ -15,37 +15,39 @@ import zh.qiushui.mod.qca.util.TranslationsUtil;
 import java.util.Map;
 
 public class QcaExtension implements CarpetExtension, ModInitializer {
-	public static final String MOD_ID = "qca";
-	public static final String MOD_NAME = "Qualia Carpet Addition";
+    public static final String MOD_ID = "qca";
+    public static final String MOD_NAME = "Qualia Carpet Addition";
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-	public static Identifier id(String path) {
-		return Identifier.of(MOD_ID, path);
-	}
+    public static Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
 
-	@Override
-	public void onInitialize() {
-		CarpetServer.manageExtension(this);
-	}
+    @Override
+    public void onInitialize() {
+        CarpetServer.manageExtension(this);
+    }
 
-	@Override
-	public void onGameStarted() {
-		CarpetServer.settingsManager.parseSettingsClass(QcaSettings.class);
-	}
+    @Override
+    public void onGameStarted() {
+        CarpetServer.settingsManager.parseSettingsClass(QcaSettings.class);
+    }
 
-	@Override
-	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext) {
-		TpCommands.register(dispatcher);
-	}
+    @Override
+    public void registerCommands(
+            CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext
+    ) {
+        TpCommands.register(dispatcher);
+    }
 
-	@Override
-	public String version() {
-		return MOD_ID;
-	}
+    @Override
+    public String version() {
+        return MOD_ID;
+    }
 
-	@Override
-	public Map<String, String> canHasTranslations(String lang) {
-		return TranslationsUtil.getTranslations(lang);
-	}
+    @Override
+    public Map<String, String> canHasTranslations(String lang) {
+        return TranslationsUtil.getTranslations(lang);
+    }
 }
