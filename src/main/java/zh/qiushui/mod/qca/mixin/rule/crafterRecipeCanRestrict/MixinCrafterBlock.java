@@ -3,7 +3,6 @@ package zh.qiushui.mod.qca.mixin.rule.crafterRecipeCanRestrict;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CrafterBlock;
-import net.minecraft.block.DropperBlock;
 import net.minecraft.block.enums.Orientation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -27,7 +26,6 @@ import zh.qiushui.mod.qca.rule.util.EntityUtil;
 import zh.qiushui.mod.qca.rule.util.restriction.Restriction;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Mixin(CrafterBlock.class)
