@@ -4,12 +4,14 @@ import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zh.qiushui.mod.qca.command.commandsTp.TpCommands;
+import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.BeaconUtil;
 import zh.qiushui.mod.qca.util.TranslationsUtil;
 
 import java.util.Map;
@@ -27,6 +29,10 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
     @Override
     public void onInitialize() {
         CarpetServer.manageExtension(this);
+
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            BeaconUtil.tick();
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -15,15 +16,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zh.qiushui.mod.qca.QcaSettings;
+import zh.qiushui.mod.qca.rule.util.EntityUtil;
+import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.BeaconUtil;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.IncreaseInteractionRange;
-import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.PlayerUtil;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Mixin(BeaconBlockEntity.class)
 public abstract class MixinBeaconBlockEntity extends BlockEntity implements IncreaseInteractionRange {
+    @Unique
+    private final Set<PlayerEntity> increasedPlayers = Sets.newConcurrentHashSet();
+
     public MixinBeaconBlockEntity(
             BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState
     ) {
@@ -32,21 +36,12 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
 
     @Override
     public Set<PlayerEntity> qca_getIncreasedPlayers() {
-        return Objects.requireNonNullElseGet(
-                PlayerUtil.INCREASED_PLAYERS.get(this.pos),
-                () -> {
-                    PlayerUtil.INCREASED_PLAYERS.put(this.pos, Sets.newHashSet());
-                    return PlayerUtil.INCREASED_PLAYERS.get(this.pos);
-                }
-        );
+        return this.increasedPlayers;
     }
-    @Override
-    public void qca_addIncreasedPlayer(PlayerEntity player) {
-        PlayerUtil.INCREASED_PLAYERS.get(this.pos).add(player);
-    }
-    @Override
-    public void qca_removeIncreasedPlayer(PlayerEntity player) {
-        PlayerUtil.INCREASED_PLAYERS.get(this.pos).remove(player);
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void registerIdentifier(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+        BeaconUtil.EVENTS.register(blockPos);
     }
 
     @Inject(
@@ -56,8 +51,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
                                                "Lnet/minecraft/util/math/BlockPos;" +
                                                "ILnet/minecraft/registry/entry/RegistryEntry;" +
                                                "Lnet/minecraft/registry/entry/RegistryEntry;)" +
-                                               "V",
-                    shift = At.Shift.AFTER
+                                               "V"
             )
     )
     private static void qca_increasePlayersInteractionRange(
@@ -69,8 +63,9 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     }
     @Inject(method = "markRemoved", at = @At("TAIL"))
     private void qca_removeModifiersOfPlayers(CallbackInfo ci) {
+        BeaconUtil.EVENTS.remove(this.pos);
         for (PlayerEntity player : this.qca_getIncreasedPlayers()) {
-            PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
+            BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.pos, player);
         }
     }
 
@@ -81,21 +76,16 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
             double rangeWidth = level * 10 + 10;
             Box range = new Box(pos).expand(rangeWidth).stretch(0, world.getHeight(), 0);
 
-            List<PlayerEntity> inRangeAndNeedIncreasePlayers = world.getEntitiesByClass(PlayerEntity.class, range, player -> true);
+            List<PlayerEntity> inRangePlayers = EntityUtil.getEntities(world, range, EntityType.PLAYER);
 
             for (PlayerEntity player : beacon.qca_getIncreasedPlayers()) {
-                if (!inRangeAndNeedIncreasePlayers.contains(player)) {
-                    PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
-                    beacon.qca_removeIncreasedPlayer(player);
-                    inRangeAndNeedIncreasePlayers.remove(player);
-                }
+                BeaconUtil.removeBeaconIncreaseModifiersForPlayer(beacon.getPos(), player);
             }
 
-            for (PlayerEntity player : inRangeAndNeedIncreasePlayers) {
-                PlayerUtil.removeBeaconIncreaseModifiersForPlayer(player);
-                PlayerUtil.addBeaconIncreaseModifiersForPlayer(player, level);
+            for (PlayerEntity player : inRangePlayers) {
+                BeaconUtil.addBeaconIncreaseModifiersForPlayer(beacon.getPos(), player, level);
 
-                beacon.qca_addIncreasedPlayer(player);
+                beacon.qca_getIncreasedPlayers().add(player);
             }
         }
     }

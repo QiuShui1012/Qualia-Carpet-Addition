@@ -9,7 +9,4 @@ public interface IncreaseInteractionRange {
     default Set<PlayerEntity> qca_getIncreasedPlayers() {
         return Sets.newHashSet();
     }
-
-    default void qca_addIncreasedPlayer(PlayerEntity player) {}
-    default void qca_removeIncreasedPlayer(PlayerEntity player) {}
 }

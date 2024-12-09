@@ -5,7 +5,6 @@
   "mixins": [
     "rule.beaconIncreaseInteractionRange.BeaconBlockEntityAccessor",
     "rule.beaconIncreaseInteractionRange.MixinBeaconBlockEntity",
-    "rule.beaconIncreaseInteractionRange.MixinServerPlayerEntity",
     "rule.breakDripleafKeepStem.MixinBigDripleafStemBlock",
     "rule.crafterRecipeCanRestrict.MixinCrafterBlock",
     "rule.easyHopperRestriction.MixinHopperBlockEntity",
