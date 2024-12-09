@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 public class Restriction {
@@ -29,7 +30,7 @@ public class Restriction {
         return new Restriction(restrictor);
     }
     public static Restriction ofItem(Item restrictor) {
-        return new Restriction(value -> value.equals(restrictor));
+        return new Restriction(restrictor::equals);
     }
     public static Restriction ofTag(TagKey<Item> restrictor) {
         return new Restriction(value -> Registries.ITEM.getEntry(value).isIn(restrictor));
@@ -44,7 +45,10 @@ public class Restriction {
     }
 
     public void setRestrictor(@NotNull Item restrictor) {
-        this.restrictor = value -> value.equals(restrictor);
+        this.restrictor = restrictor::equals;
+    }
+    public void setRestrictor(@NotNull Collection<Item> restrictor) {
+        this.restrictor = restrictor::contains;
     }
     public void setRestrictor(@Nullable String idRaw) {
         if (idRaw != null) {
@@ -68,6 +72,6 @@ public class Restriction {
 
     public static Predicate<Item> parseItemRestrictor(String idRaw) {
         Item restrictor = Registries.ITEM.get(Identifier.tryParse(idRaw));
-        return !restrictor.equals(Items.AIR) ? (Item item) -> item.equals(restrictor) : null;
+        return !restrictor.equals(Items.AIR) ? restrictor::equals : null;
     }
 }

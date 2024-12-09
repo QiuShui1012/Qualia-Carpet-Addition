@@ -1,5 +1,6 @@
 package zh.qiushui.mod.qca.rule.util;
 
+import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
@@ -7,30 +8,36 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Predicate;
 
 public class EntityUtil {
-    public static <E extends Entity> Optional<E> getEntityWithFallback(
-            World world, BlockPos pos, EntityType<E> type, EntityType<? extends E> fallback
+    public static <E extends Entity> List<E> getEntities(World world, BlockPos pos, EntityType<E> type) {
+        return world.getEntitiesByType(type, new Box(pos), player -> true);
+    }
+    @SafeVarargs
+    public static <E extends Entity> List<E> getEntities(
+            World world, BlockPos pos, EntityType<? extends E>... types
     ) {
-        Optional<E> entityOptional = getEntity(world, pos, type);
-        if (entityOptional.isEmpty()) {
-            return (Optional<E>) getEntity(world, pos, fallback);
-        } else {
-            return entityOptional;
+        List<E> entities = Lists.newArrayList();
+        for (EntityType<? extends E> type : types) {
+            entities.addAll(getEntities(world, pos, type));
         }
+        return entities;
+    }
+    public static <E extends Entity> List<E> getEntitiesIf(
+            World world, BlockPos pos, EntityType<E> type, Predicate<E> filter
+    ) {
+        List<E> entities = getEntities(world, pos, type);
+        entities.removeIf(filter);
+        return entities;
+    }
+    @SafeVarargs
+    public static <E extends Entity> List<E> getEntitiesIf(
+            World world, BlockPos pos, Predicate<E> filter, EntityType<? extends E>... types
+    ) {
+        List<E> entities = getEntities(world, pos, types);
+        entities.removeIf(filter);
+        return entities;
     }
 
-    public static <E extends Entity> Optional<E> getEntity(World world, BlockPos pos, EntityType<E> type) {
-        List<Entity> entities = world.getOtherEntities(null, new Box(pos));
-        E entityOptional = null;
-
-        for (Entity entity : entities) {
-            if (entity.getType().equals(type)) {
-                entityOptional = (E) entity;
-            }
-        }
-
-        return Optional.ofNullable(entityOptional);
-    }
 }

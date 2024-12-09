@@ -1,7 +1,9 @@
 package zh.qiushui.mod.qca.mixin.rule.crafterRecipeCanRestrict;
 
+import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CrafterBlock;
+import net.minecraft.block.DropperBlock;
 import net.minecraft.block.enums.Orientation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -24,7 +26,9 @@ import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 import zh.qiushui.mod.qca.rule.util.restriction.Restriction;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Mixin(CrafterBlock.class)
 public abstract class MixinCrafterBlock {
@@ -43,21 +47,22 @@ public abstract class MixinCrafterBlock {
     private void qca_updateRestriction(
             BlockState blockState, ServerWorld world, BlockPos blockPos, Random random, CallbackInfo ci
     ) {
-        Optional<ItemFrameEntity> itemFrameOptional = EntityUtil.getEntityWithFallback(
+        List<ItemFrameEntity> itemFrames = EntityUtil.getEntitiesIf(
                 world, blockPos.offset(blockState.get(ORIENTATION).getRotation()),
+                itemFrame -> itemFrame.getFacing().equals(blockState.get(ORIENTATION).getRotation()),
                 EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME
         );
 
-        if (itemFrameOptional.isPresent()) {
-            ItemFrameEntity itemFrame = itemFrameOptional.get();
-
-            if (itemFrame.getFacing().equals(blockState.get(ORIENTATION).getRotation())) {
+        if (!itemFrames.isEmpty()) {
+            Set<Item> items = Sets.newHashSet();
+            itemFrames.forEach(itemFrame -> {
                 Item restrictor = itemFrame.getHeldItemStack().getItem();
 
                 if (!restrictor.equals(Items.AIR)) {
-                    this.restriction.setRestrictor(restrictor);
+                    items.add(restrictor);
                 }
-            }
+            });
+            this.restriction.setRestrictor(items);
         } else {
             this.restriction.resetRestrictor();
         }
