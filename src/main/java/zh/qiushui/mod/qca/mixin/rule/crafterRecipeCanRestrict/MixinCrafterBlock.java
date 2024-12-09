@@ -47,7 +47,7 @@ public abstract class MixinCrafterBlock {
     ) {
         List<ItemFrameEntity> itemFrames = EntityUtil.getEntitiesIf(
                 world, blockPos.offset(blockState.get(ORIENTATION).getRotation()),
-                itemFrame -> itemFrame.getFacing().equals(blockState.get(ORIENTATION).getRotation()),
+                itemFrame -> !itemFrame.getFacing().equals(blockState.get(ORIENTATION).getRotation()),
                 EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME
         );
 
