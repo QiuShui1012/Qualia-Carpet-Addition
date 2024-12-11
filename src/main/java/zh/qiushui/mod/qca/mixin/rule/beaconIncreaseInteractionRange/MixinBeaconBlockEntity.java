@@ -41,7 +41,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerIdentifier(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-        BeaconUtil.EVENTS.register(blockPos);
+        BeaconUtil.TASKS.register(blockPos);
     }
 
     @Inject(
@@ -63,10 +63,10 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     }
     @Inject(method = "markRemoved", at = @At("TAIL"))
     private void qca_removeModifiersOfPlayers(CallbackInfo ci) {
-        BeaconUtil.EVENTS.remove(this.pos);
         for (PlayerEntity player : this.qca_getIncreasedPlayers()) {
             BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.pos, player);
         }
+        BeaconUtil.TASKS.remove(this.pos);
     }
 
     @Unique

@@ -30,9 +30,7 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
     public void onInitialize() {
         CarpetServer.manageExtension(this);
 
-        ServerTickEvents.END_WORLD_TICK.register(world -> {
-            BeaconUtil.tick();
-        });
+        ServerTickEvents.END_WORLD_TICK.register(world -> BeaconUtil.tick());
     }
 
     @Override
