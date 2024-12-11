@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.restriction.Restrictable;
 import zh.qiushui.mod.qca.rule.util.restriction.Restriction;
@@ -22,8 +23,7 @@ import java.util.Objects;
 
 @Mixin(value = HopperBlockEntity.class, priority = 900)
 public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntity implements Restrictable {
-    @Unique
-    private Restriction restriction = Restriction.empty();
+    @Unique private Restriction restriction = Restriction.empty();
 
     protected MixinHopperBlockEntity(
             BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState
@@ -46,6 +46,9 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
     ) {
         try {
             hopper.qca_setRestrictor(Objects.requireNonNull(hopper.getCustomName()).getString());
+            if (QcaSettings.qcaDebugLog) {
+                QcaExtension.LOGGER.debug("(Tick) Tried to set the restrictor from the custom name.");
+            }
         } catch (NullPointerException ignored) {}
     }
 
