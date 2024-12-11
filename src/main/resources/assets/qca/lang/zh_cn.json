@@ -1,6 +1,8 @@
 {
   "carpet.category.qca": "QCA",
 
+  "carpet.rule.qcaDebugLog.name": "QCA Debug日志",
+  "carpet.rule.qcaDebugLog.desc": "向debug日志打印更多debug信息。",
   "carpet.rule.commandTpPos.name": "/tppos 命令",
   "carpet.rule.commandTpPos.desc": "/tp 命令，但是只能将一个实体传送到一个坐标。",
   "carpet.rule.commandTpPlayer.name": "/tpplayer 命令",

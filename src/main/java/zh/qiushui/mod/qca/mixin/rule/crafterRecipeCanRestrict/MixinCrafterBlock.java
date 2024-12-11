@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 import zh.qiushui.mod.qca.rule.util.restriction.Restriction;
@@ -61,14 +62,27 @@ public abstract class MixinCrafterBlock {
                 }
             });
             this.restriction.setRestrictor(items);
+            if (QcaSettings.qcaDebugLog) {
+                QcaExtension.LOGGER.debug("A crafter located at {} updated its restrictor {}.", blockPos, items);
+            }
         } else {
             this.restriction.resetRestrictor();
+            if (QcaSettings.qcaDebugLog) {
+                QcaExtension.LOGGER.debug("A crafter located at {} reset its restrictor.", blockPos);
+            }
         }
     }
 
     @Redirect(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"))
     private boolean qca_restrictResult(ItemStack instance) {
-        return instance.isEmpty()
-               || (QcaSettings.crafterRecipeCanRestrict && !this.restriction.restrict(instance));
+        boolean isEmpty = instance.isEmpty();
+        boolean restricted = QcaSettings.crafterRecipeCanRestrict && !this.restriction.restrict(instance);
+        if (QcaSettings.qcaDebugLog) {
+            QcaExtension.LOGGER.debug(
+                    "A crafter restricted once. {}",
+                    restricted ? "Success!" : isEmpty ? "Failed. The instance is empty." : "Failed."
+            );
+        }
+        return isEmpty || restricted;
     }
 }

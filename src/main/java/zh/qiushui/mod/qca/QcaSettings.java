@@ -12,6 +12,12 @@ import static carpet.api.settings.RuleCategory.*;
 
 public class QcaSettings {
     public static final String QCA = "qca";
+    public static final String DEBUG = "debug";
+
+    @Rule(
+            categories = {QCA, DEBUG, EXPERIMENTAL}
+    )
+    public static boolean qcaDebugLog = false;
 
     @Rule(
             categories = {QCA, COMMAND, EXPERIMENTAL},
