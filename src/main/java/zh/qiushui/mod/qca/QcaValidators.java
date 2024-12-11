@@ -15,10 +15,10 @@ public class QcaValidators {
 
         @Override
         public String validate(
-                @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String s, String s2
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
         ) {
-            String[] options = s.trim().split(",");
-            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : s;
+            String[] options = newValue.trim().split(",");
+            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
         }
 
         @Override
@@ -30,7 +30,7 @@ public class QcaValidators {
     public static class TooExpensiveLevel extends Validator<Integer> {
         @Override
         public Integer validate(
-                @Nullable ServerCommandSource serverCommandSource, CarpetRule<Integer> carpetRule, Integer newValue, String s
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<Integer> carpetRule, Integer newValue, String userInput
         ) {
             return newValue < -1 ? 39 : newValue;
         }
@@ -50,9 +50,9 @@ public class QcaValidators {
 
         @Override
         public String validate(
-                @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String s, String s2
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
         ) {
-            return !MODES.contains(s) ? null : s;
+            return !MODES.contains(newValue) ? null : newValue;
         }
 
         @Override
@@ -63,10 +63,10 @@ public class QcaValidators {
     public static class BeaconIncreaseInteractionRangeValue extends Validator<Double> {
         @Override
         public Double validate(
-                @Nullable ServerCommandSource serverCommandSource, CarpetRule<Double> carpetRule, Double aDouble,
-                String s
+                @Nullable ServerCommandSource serverCommandSource, CarpetRule<Double> carpetRule,
+                Double newValue, String userInput
         ) {
-            return (QcaSettings.beaconIncreaseIsEnabled() && aDouble < 0) ? 0 : aDouble;
+            return (QcaSettings.beaconIncreaseIsEnabled() && newValue < 0) ? 0 : newValue;
         }
 
         @Override

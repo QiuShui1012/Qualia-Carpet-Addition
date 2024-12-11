@@ -13,7 +13,7 @@ archives-name = "qca"
 
 # Dependency Properties
 fabric-api = "0.110.0+1.21.3"
-fabric-carpet = "5834860"
+fabric-carpet = "1.21.2-1.4.158+v241022"
 
 lombok = "1.18.30"
 
@@ -32,7 +32,7 @@ fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.r
 mappings-yarn = { group = "net.fabricmc", name = "yarn", version.ref = "mappings-yarn" }
 
 # Carpet
-fabric-carpet = { group = "curse.maven", name = "carpet-349239", version.ref = "fabric-carpet" }
+fabric-carpet = { group = "carpet", name = "fabric-carpet", version.ref = "fabric-carpet" }
 
 [plugins]
 

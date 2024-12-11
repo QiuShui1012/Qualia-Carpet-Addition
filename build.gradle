@@ -10,8 +10,8 @@ base.archivesName = libs.versions.archives.name.get()
 
 repositories {
 	maven {
-		name "Curse Maven"
-		url "https://cursemaven.com"
+		name "Masa Maven"
+		url "https://masa.dy.fi/maven"
 	}
 }
 
