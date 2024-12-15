@@ -1,2 +1,2 @@
 ## What's new
-- **Fixed equipment and weapon cannot damage on everytime**
+- **Fixed equipment cannot damage when PVE and weapon cannot damage on everytime**
