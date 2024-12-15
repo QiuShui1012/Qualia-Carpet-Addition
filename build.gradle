@@ -60,7 +60,7 @@ jar {
 
 publishMods {
 	file = remapJar.archiveFile
-	changelog = "## What's new\n"
+	changelog = file("latest-changelog.md").text
 	type = STABLE
 	modLoaders.add("fabric")
 
