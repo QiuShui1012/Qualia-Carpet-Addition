@@ -60,7 +60,7 @@ jar {
 
 publishMods {
 	file = remapJar.archiveFile
-	additionalFiles.builtBy(tasks.sourcesJar)
+	additionalFiles.from(remapSourcesJar.archiveFile)
 	changelog = file("latest-changelog.md").text
 	type = STABLE
 	modLoaders.add("fabric")
@@ -75,6 +75,7 @@ publishMods {
 	github {
 		accessToken = providers.environmentVariable("GITHUB_PUBLISH_VERSION_PAT")
 		repository = "QiuShui1012/Qualia-Carpet-Addition"
+		displayName = project.version
 		commitish = "main"
 		tagName = project.version
 	}
