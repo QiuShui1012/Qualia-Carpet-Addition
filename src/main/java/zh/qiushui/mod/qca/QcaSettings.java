@@ -15,18 +15,18 @@ public class QcaSettings {
     public static final String DEBUG = "debug";
 
     @Rule(
-            categories = {QCA, DEBUG, EXPERIMENTAL}
+            categories = {QCA, DEBUG}
     )
     public static boolean qcaDebugLog = false;
 
     @Rule(
-            categories = {QCA, COMMAND, EXPERIMENTAL},
+            categories = {QCA, COMMAND},
             options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
             validators = Validators.CommandLevel.class
     )
     public static String commandTpPos = "ops";
     @Rule(
-            categories = {QCA, COMMAND, EXPERIMENTAL},
+            categories = {QCA, COMMAND},
             options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
             validators = Validators.CommandLevel.class
     )
@@ -38,7 +38,7 @@ public class QcaSettings {
     public static boolean breakDripleafKeepStem = false;
 
     @Rule(
-            categories = {QCA, FEATURE, SURVIVAL, EXPERIMENTAL},
+            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL},
             options = {
                     "enable",
                     "grasses,dripleaf", "grasses,flowers", "dripleaf,flowers",
@@ -73,7 +73,7 @@ public class QcaSettings {
     }
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL},
+            categories = {QCA, SURVIVAL, FEATURE},
             validators = QcaValidators.TooExpensiveLevel.class
     )
     public static int tooExpensiveLevel = 39;
@@ -83,7 +83,7 @@ public class QcaSettings {
     }
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL}
+            categories = {QCA, SURVIVAL, FEATURE}
     )
     public static double repairCostMultiplier = 2.0D;
 
