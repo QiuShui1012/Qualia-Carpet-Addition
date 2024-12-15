@@ -9,7 +9,7 @@
   "carpet.rule.commandTpPlayer.desc": "/tp 命令，但是只能将一个玩家传送到另一个玩家。",
   "carpet.rule.tallPlantShearToSmall.name": "高植物可剪成其小型变种",
   "carpet.rule.tallPlantShearToSmall.desc": "允许玩家将高植物剪成或与剪刀制作为它们的小型“变种”。注意此处的“变种”仅为游戏内相似用途的合并，与现实中的植物无关系。",
-  "carpet.rule.breakDripleafKeepStem.name": "挖掘大型垂滴叶保留茎",
+  "carpet.rule.breakDripleafKeepStem.name": "破坏大型垂滴叶保留茎",
   "carpet.rule.breakDripleafKeepStem.desc": "更改大型垂滴叶茎在顶部被破坏时的行为。\n现在，当顶部的垂滴叶被破坏时，最靠上的茎会变成垂滴叶并保持其它茎不被破坏。",
   "carpet.rule.tooExpensiveLevel.name": "“过于昂贵”累计惩罚等级",
   "carpet.rule.tooExpensiveLevel.desc": "更改在铁砧中触发“过于昂贵”提示的累计惩罚等级。",
