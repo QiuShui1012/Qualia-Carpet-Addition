@@ -68,6 +68,7 @@ publishMods {
 	modrinth {
 		accessToken = providers.environmentVariable("MODRINTH_PUBLISH_VERSION_PAT")
 		projectId = "JyI4tI00"
+		requires("carpet")
 		minecraftVersions.add("1.21.2")
 		minecraftVersions.add("1.21.3")
 	}
