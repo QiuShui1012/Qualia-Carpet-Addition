@@ -25,8 +25,8 @@ public abstract class MixinLivingEntity {
             DamageSource source
     ) {
         if (
-                QcaSettings.pvpDoNotDamageEquipment
-                && !(thisE instanceof PlayerEntity) && !(source.getAttacker() instanceof PlayerEntity)
+                !QcaSettings.pvpDoNotDamageEquipment ||
+                (!(thisE instanceof PlayerEntity) && !(source.getAttacker() instanceof PlayerEntity))
         ) {
             instance.damage(i, thisE, equipmentSlot);
         }
