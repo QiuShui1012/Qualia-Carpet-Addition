@@ -26,7 +26,7 @@ public abstract class MixinItemStack {
     ) {
         if (
                 !QcaSettings.pvpDoNotDamageWeapon ||
-                (!(livingEntity instanceof PlayerEntity) && !(livingEntity2 instanceof PlayerEntity))
+                !(livingEntity instanceof PlayerEntity && livingEntity2 instanceof PlayerEntity)
         ) {
             instance.postDamageEntity(itemStack, livingEntity, livingEntity2);
         }
