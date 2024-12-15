@@ -1,5 +1,6 @@
 {
   "carpet.category.qca": "QCA",
+  "carpet.category.pvp": "PVP",
 
   "carpet.rule.qcaDebugLog.desc": "Prints more debug info in the debug log.",
   "carpet.rule.commandTpPos.name": "/tppos Command",
@@ -14,5 +15,7 @@
   "carpet.rule.easierHopperRestriction.desc": "Allow players to rename the hopper to only extract certain types of items.\nSupport long ID (\"namespace:path\" for items or \"#namespace:path\" for tags) and short ID (\"path\" or \"#path\" mentioned earlier, only supports namespace minecraft).",
   "carpet.rule.crafterRecipeCanRestrict.desc": "Allow players to limit recipes by placing (glow) item frame at the top of the crafter.\nAt this time, the crafter only support recipes for items within the (glow) item frame.\nNote that the \"top\" side means the side has nine-square grid.",
   "carpet.rule.beaconIncreaseInteractionRange.desc": "Allows beacon to increase players' interaction range when the players are in the range of the beacon.",
-  "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "Sets the value for beacon when calculating the increased interaction range if the rule beaconIncreaseInteractionRange is not \"false\"."
+  "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "Sets the value for beacon when calculating the increased interaction range if the rule beaconIncreaseInteractionRange is not \"false\".",
+  "carpet.rule.pvpDoNotDamageEquipment.desc": "Make equipments not damage during PVP.",
+  "carpet.rule.pvpDoNotDamageWeapon.desc": "Make weapon not damage during PVP."
 }

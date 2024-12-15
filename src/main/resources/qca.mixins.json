@@ -9,6 +9,7 @@
     "rule.crafterRecipeCanRestrict.MixinCrafterBlock",
     "rule.easyHopperRestriction.MixinHopperBlockEntity",
     "rule.itemsCanPassThroughChains.MixinChainBlock",
+    "rule.pvpDoNotDamageEquipment.MixinLivingEntity",
     "rule.tallPlantShearToSmall.MixinShearsItem",
     "rule.tooExpensive.MixinAnvilScreenHandler"
   ],

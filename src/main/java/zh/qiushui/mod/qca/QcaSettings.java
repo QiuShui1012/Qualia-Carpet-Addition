@@ -12,6 +12,7 @@ import static carpet.api.settings.RuleCategory.*;
 
 public class QcaSettings {
     public static final String QCA = "qca";
+    public static final String PVP = "pvp";
     public static final String DEBUG = "debug";
 
     @Rule(
@@ -142,4 +143,13 @@ public class QcaSettings {
                        : (level * beaconIncreaseInteractionRangeValue)
                );
     }
+
+    @Rule(
+            categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
+    )
+    public static boolean pvpDoNotDamageEquipment = false;
+    @Rule(
+            categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
+    )
+    public static boolean pvpDoNotDamageWeapon = false;
 }

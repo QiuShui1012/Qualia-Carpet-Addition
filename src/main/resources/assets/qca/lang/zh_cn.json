@@ -1,5 +1,6 @@
 {
   "carpet.category.qca": "QCA",
+  "carpet.category.pvp": "PVP",
 
   "carpet.rule.qcaDebugLog.name": "QCA Debug日志",
   "carpet.rule.qcaDebugLog.desc": "向debug日志打印更多debug信息。",
@@ -24,5 +25,9 @@
   "carpet.rule.beaconIncreaseInteractionRange.name": "信标可提升玩家交互范围",
   "carpet.rule.beaconIncreaseInteractionRange.desc": "允许信标当玩家在范围内时为其提升交互范围。",
   "carpet.rule.beaconIncreaseInteractionRangeValue.name": "信标可提升玩家交互范围值",
-  "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "设置当规则“信标可提升玩家交互范围”不为“false”时，信标计算增加的交互范围时使用的值。"
+  "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "设置当规则“信标可提升玩家交互范围”不为“false”时，信标计算增加的交互范围时使用的值。",
+  "carpet.rule.pvpDoNotDamageEquipment.name": "PVP时不会损伤盔甲",
+  "carpet.rule.pvpDoNotDamageEquipment.desc": "使盔甲在PVP时不会受伤害。",
+  "carpet.rule.pvpDoNotDamageWeapon.name": "PVP时不会损伤武器",
+  "carpet.rule.pvpDoNotDamageWeapon.desc": "使武器在PVP时不会受伤害。"
 }
