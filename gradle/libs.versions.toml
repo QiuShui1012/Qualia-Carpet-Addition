@@ -19,6 +19,7 @@ lombok = "1.18.30"
 
 # Gradle Plugin Properties
 fabric-loom = "1.8-SNAPSHOT"
+modpublish = "0.8.2"
 
 [libraries]
 
@@ -37,3 +38,4 @@ fabric-carpet = { group = "carpet", name = "fabric-carpet", version.ref = "fabri
 [plugins]
 
 fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+modpublish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "modpublish"}
