@@ -40,7 +40,7 @@ public class QcaSettings {
     public static boolean breakDripleafKeepStem = false;
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL},
+            categories = {QCA, SURVIVAL, FEATURE},
             options = {
                     "enable",
                     "grasses,dripleaf", "grasses,flowers", "dripleaf,flowers",
@@ -90,7 +90,7 @@ public class QcaSettings {
     public static double repairCostMultiplier = 2.0D;
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL}
+            categories = {QCA, FEATURE}
     )
     public static boolean itemsCanPassThroughChains = false;
 
