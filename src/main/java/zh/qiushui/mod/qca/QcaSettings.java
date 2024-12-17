@@ -3,6 +3,7 @@ package zh.qiushui.mod.qca;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validators;
 import net.minecraft.block.Block;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 
 import java.util.Arrays;
@@ -152,4 +153,9 @@ public class QcaSettings {
             categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean pvpDoNotDamageWeapon = false;
+
+    @Rule(
+            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+    )
+    public static boolean boneMealDoubleSmallFlowers = false;
 }
