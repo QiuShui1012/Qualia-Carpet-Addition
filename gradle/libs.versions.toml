@@ -35,6 +35,10 @@ mappings-yarn = { group = "net.fabricmc", name = "yarn", version.ref = "mappings
 # Carpet
 fabric-carpet = { group = "carpet", name = "fabric-carpet", version.ref = "fabric-carpet" }
 
+[bundles]
+
+fabric = ["fabric-loader", "fabric-api"]
+
 [plugins]
 
 fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }

@@ -27,9 +27,8 @@ dependencies {
 	compileOnly libs.lombok
 	annotationProcessor libs.lombok
 
-	modImplementation libs.fabric.loader
+	modImplementation libs.bundles.fabric
 
-	modImplementation libs.fabric.api
 	modImplementation libs.fabric.carpet
 }
 
