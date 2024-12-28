@@ -17,5 +17,6 @@
   "carpet.rule.beaconIncreaseInteractionRange.desc": "Allows beacon to increase players' interaction range when the players are in the range of the beacon.",
   "carpet.rule.beaconIncreaseInteractionRangeValue.desc": "Sets the value for beacon when calculating the increased interaction range if the rule beaconIncreaseInteractionRange is not \"false\".",
   "carpet.rule.pvpDoNotDamageEquipment.desc": "Make equipments not damage during PVP.",
-  "carpet.rule.pvpDoNotDamageWeapon.desc": "Make weapon not damage during PVP."
+  "carpet.rule.pvpDoNotDamageWeapon.desc": "Make weapon not damage during PVP.",
+  "carpet.rule.boneMealDoubleSmallFlowers.desc": "Allow players to use bone meal to double the small flowers."
 }

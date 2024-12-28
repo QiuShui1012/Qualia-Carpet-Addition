@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.boneMealDoubleSmallFlowers.DoubleWithFertilization;
@@ -15,6 +16,11 @@ import zh.qiushui.mod.qca.rule.util.boneMealDoubleSmallFlowers.DoubleWithFertili
 public abstract class MixinFlowerBlock extends PlantBlock implements DoubleWithFertilization {
     protected MixinFlowerBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
+        return QcaSettings.boneMealDoubleSmallFlowers;
     }
 
     @Override
