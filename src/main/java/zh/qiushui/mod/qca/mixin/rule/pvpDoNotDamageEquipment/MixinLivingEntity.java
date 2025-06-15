@@ -13,22 +13,20 @@ import zh.qiushui.mod.qca.QcaSettings;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
     @Redirect(
-            method = "damageEquipment", at = @At(
-                    value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;" +
-                                               "damage(ILnet/minecraft/entity/LivingEntity;" +
-                                               "Lnet/minecraft/entity/EquipmentSlot;)" +
-                                               "V"
-            )
-    )
+        method = "damageEquipment",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/item/ItemStack;"
+                     + "damage(ILnet/minecraft/entity/LivingEntity;"
+                     + "Lnet/minecraft/entity/EquipmentSlot;)V"
+        ))
     private void checkForPlayerInEquipment(
-            ItemStack instance, int i, LivingEntity thisE, EquipmentSlot equipmentSlot,
-            DamageSource source
+        ItemStack instance, int i, LivingEntity thiS, EquipmentSlot equipmentSlot, DamageSource source
     ) {
         if (
-                !QcaSettings.pvpDoNotDamageEquipment ||
-                !(thisE instanceof PlayerEntity && source.getAttacker() instanceof PlayerEntity)
+            !QcaSettings.pvpDoNotDamageEquipment || !(thiS instanceof PlayerEntity && source.getAttacker() instanceof PlayerEntity)
         ) {
-            instance.damage(i, thisE, equipmentSlot);
+            instance.damage(i, thiS, equipmentSlot);
         }
     }
 }

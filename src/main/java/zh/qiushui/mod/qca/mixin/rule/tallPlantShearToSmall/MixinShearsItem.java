@@ -25,8 +25,8 @@ import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 @Mixin(ShearsItem.class)
 public abstract class MixinShearsItem {
     @Inject(method = "useOnBlock", at = @At(value = "TAIL"), cancellable = true)
-    private void qca_checkForTallPlant(
-            ItemUsageContext ctx, CallbackInfoReturnable<ActionResult> cir
+    private void qca$checkForTallPlant(
+        ItemUsageContext ctx, CallbackInfoReturnable<ActionResult> cir
     ) {
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
@@ -36,18 +36,18 @@ public abstract class MixinShearsItem {
 
         switch (QcaSettings.matchTallPlant(block)) {
             case 1, 3 -> cir.setReturnValue(
-                    qca_shearTallPlant(ctx, world, pos, block, state.get(Properties.DOUBLE_BLOCK_HALF))
+                qca$shearTallPlant(ctx, world, pos, block, state.get(Properties.DOUBLE_BLOCK_HALF))
             );
             case 2 -> cir.setReturnValue(
-                    qca_shearBigDripleaf(ctx, world, pos, block)
+                qca$shearBigDripleaf(ctx, world, pos, block)
             );
         }
     }
 
     @Unique
-    private static ActionResult qca_shearTallPlant(
-            ItemUsageContext ctx, World world, BlockPos pos,
-            Block plant, DoubleBlockHalf half
+    private static ActionResult qca$shearTallPlant(
+        ItemUsageContext ctx, World world, BlockPos pos,
+        Block plant, DoubleBlockHalf half
     ) {
         Block small = PlantTransformUtil.SMALL_TALL_PLANTS.inverse().get(plant).getFirst();
 
@@ -72,8 +72,8 @@ public abstract class MixinShearsItem {
         }
 
         world.spawnEntity(new ItemEntity(
-                world, pos.getX(), pos.getY(), pos.getZ(),
-                small.asItem().getDefaultStack().copyWithCount(2)
+            world, pos.getX(), pos.getY(), pos.getZ(),
+            small.asItem().getDefaultStack().copyWithCount(2)
         ));
         if (player != null) {
             ctx.getStack().damage(1, player, LivingEntity.getSlotForHand(ctx.getHand()));
@@ -83,7 +83,7 @@ public abstract class MixinShearsItem {
     }
 
     @Unique
-    private static ActionResult qca_shearBigDripleaf(ItemUsageContext ctx, World world, BlockPos pos, Block plant) {
+    private static ActionResult qca$shearBigDripleaf(ItemUsageContext ctx, World world, BlockPos pos, Block plant) {
         Block small = PlantTransformUtil.SMALL_TALL_PLANTS.inverse().get(plant).getFirst();
 
         PlayerEntity player = ctx.getPlayer();
@@ -92,8 +92,8 @@ public abstract class MixinShearsItem {
         world.removeBlock(pos, false);
 
         world.spawnEntity(new ItemEntity(
-                world, pos.getX(), pos.getY(), pos.getZ(),
-                small.asItem().getDefaultStack().copyWithCount(1)
+            world, pos.getX(), pos.getY(), pos.getZ(),
+            small.asItem().getDefaultStack().copyWithCount(1)
         ));
         if (player != null) {
             ctx.getStack().damage(1, player, LivingEntity.getSlotForHand(ctx.getHand()));

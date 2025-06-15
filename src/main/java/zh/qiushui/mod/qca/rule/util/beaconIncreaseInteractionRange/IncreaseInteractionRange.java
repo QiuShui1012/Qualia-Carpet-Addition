@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.Set;
 
 public interface IncreaseInteractionRange {
-    default Set<PlayerEntity> qca_getIncreasedPlayers() {
+    default Set<PlayerEntity> qca$getIncreasedPlayers() {
         return Sets.newHashSet();
     }
 }

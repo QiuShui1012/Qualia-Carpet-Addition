@@ -4,6 +4,7 @@ import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
@@ -40,7 +41,7 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
 
     @Override
     public void registerCommands(
-            CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext
+        CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext
     ) {
         TpCommands.register(dispatcher);
     }

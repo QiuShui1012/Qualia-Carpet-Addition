@@ -3,17 +3,17 @@ plugins {
 	alias libs.plugins.modpublish
 }
 
-group = libs.versions.group.get()
-version = libs.versions.version.get()
+group = project.group
+version = project.version
 
-base.archivesName = libs.versions.archives.name.get()
+base.archivesName = project.archives_name
 
 repositories {
+	mavenCentral()
 	maven {
 		name "Masa Maven"
 		url "https://masa.dy.fi/maven"
 	}
-	mavenCentral()
 }
 
 loom {
@@ -21,7 +21,6 @@ loom {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft libs.minecraft
 	mappings libs.mappings.yarn
 

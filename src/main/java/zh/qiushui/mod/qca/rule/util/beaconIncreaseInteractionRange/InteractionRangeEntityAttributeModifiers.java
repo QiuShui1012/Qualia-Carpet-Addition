@@ -11,25 +11,25 @@ public class InteractionRangeEntityAttributeModifiers {
 
     public static EntityAttributeModifier getBeaconBlockRangeModifier(int beaconLevel) {
         return new EntityAttributeModifier(
-                BEACON_BLOCK_RANGE_MODIFIER_IDENTIFIER,
-                QcaSettings.getBeaconIncreaseInteractionRangeValue(beaconLevel),
-                QcaSettings.beaconIncreaseModeIsAdd()
-                ? EntityAttributeModifier.Operation.ADD_VALUE
-                : QcaSettings.beaconIncreaseModeIsBase()
-                  ? EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                  : EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+            BEACON_BLOCK_RANGE_MODIFIER_IDENTIFIER,
+            QcaSettings.getBeaconIncreaseInteractionRangeValue(beaconLevel),
+            QcaSettings.beaconIncreaseModeIsAdd()
+            ? EntityAttributeModifier.Operation.ADD_VALUE
+            : QcaSettings.beaconIncreaseModeIsBase()
+              ? EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+              : EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }
 
     public static EntityAttributeModifier getBeaconEntityRangeModifier(int beaconLevel) {
         return new EntityAttributeModifier(
-                BEACON_ENTITY_RANGE_MODIFIER_IDENTIFIER,
-                QcaSettings.getBeaconIncreaseInteractionRangeValue(beaconLevel),
-                QcaSettings.beaconIncreaseModeIsAdd()
-                ? EntityAttributeModifier.Operation.ADD_VALUE
-                : QcaSettings.beaconIncreaseModeIsBase()
-                  ? EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                  : EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+            BEACON_ENTITY_RANGE_MODIFIER_IDENTIFIER,
+            QcaSettings.getBeaconIncreaseInteractionRangeValue(beaconLevel),
+            QcaSettings.beaconIncreaseModeIsAdd()
+            ? EntityAttributeModifier.Operation.ADD_VALUE
+            : QcaSettings.beaconIncreaseModeIsBase()
+              ? EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+              : EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }
 }

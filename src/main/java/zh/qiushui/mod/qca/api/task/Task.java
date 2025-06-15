@@ -4,6 +4,7 @@ import lombok.Getter;
 import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
 
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class Task implements Runnable {
     @Getter
     private final String info;

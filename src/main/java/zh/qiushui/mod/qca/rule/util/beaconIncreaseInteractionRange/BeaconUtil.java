@@ -20,24 +20,26 @@ public class BeaconUtil {
     public static void addBeaconIncreaseModifiersForPlayer(BlockPos pos, PlayerEntity player, int level) {
         TASKS.provideQuest(pos, () -> addBeaconIncreaseModifiersForPlayer(player, level));
     }
+
     public static void addBeaconIncreaseModifiersForPlayer(PlayerEntity player, int level) {
         if (player != null && player.isAlive() && player.getEntityWorld() != null) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE))
-                    .overwritePersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconBlockRangeModifier(level));
+                .overwritePersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconBlockRangeModifier(level));
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE))
-                    .overwritePersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconEntityRangeModifier(level));
+                .overwritePersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconEntityRangeModifier(level));
         }
     }
 
     public static void removeBeaconIncreaseModifiersForPlayer(BlockPos pos, PlayerEntity player) {
         TASKS.provideQuest(pos, () -> removeBeaconIncreaseModifiersForPlayer(player));
     }
+
     public static void removeBeaconIncreaseModifiersForPlayer(PlayerEntity player) {
         if (player != null && player.isAlive() && player.getEntityWorld() != null) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE))
-                    .removeModifier(InteractionRangeEntityAttributeModifiers.BEACON_BLOCK_RANGE_MODIFIER_IDENTIFIER);
+                .removeModifier(InteractionRangeEntityAttributeModifiers.BEACON_BLOCK_RANGE_MODIFIER_IDENTIFIER);
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE))
-                    .removeModifier(InteractionRangeEntityAttributeModifiers.BEACON_ENTITY_RANGE_MODIFIER_IDENTIFIER);
+                .removeModifier(InteractionRangeEntityAttributeModifiers.BEACON_ENTITY_RANGE_MODIFIER_IDENTIFIER);
         }
     }
 }

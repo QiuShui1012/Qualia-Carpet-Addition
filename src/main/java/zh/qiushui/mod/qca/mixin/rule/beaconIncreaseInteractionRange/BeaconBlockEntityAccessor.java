@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(BeaconBlockEntity.class)
 public interface BeaconBlockEntityAccessor {
     @Accessor("level")
-    int qca_getLevel();
+    int qca$getLevel();
 }

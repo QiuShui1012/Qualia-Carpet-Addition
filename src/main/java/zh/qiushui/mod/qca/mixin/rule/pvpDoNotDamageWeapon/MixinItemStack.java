@@ -12,20 +12,19 @@ import zh.qiushui.mod.qca.QcaSettings;
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack {
     @Redirect(
-            method = "postDamageEntity", at = @At(
-                    value = "INVOKE", target = "Lnet/minecraft/item/Item;" +
-                                               "postDamageEntity(Lnet/minecraft/item/ItemStack;" +
-                                               "Lnet/minecraft/entity/LivingEntity;" +
-                                               "Lnet/minecraft/entity/LivingEntity;)" +
-                                               "V"
-            )
-    )
+        method = "postDamageEntity",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/item/Item;"
+                     + "postDamageEntity(Lnet/minecraft/item/ItemStack;"
+                     + "Lnet/minecraft/entity/LivingEntity;"
+                     + "Lnet/minecraft/entity/LivingEntity;)V"
+        ))
     private void checkForPlayer(
-            Item instance, ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2
+        Item instance, ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2
     ) {
         if (
-                !QcaSettings.pvpDoNotDamageWeapon ||
-                !(livingEntity instanceof PlayerEntity && livingEntity2 instanceof PlayerEntity)
+            !QcaSettings.pvpDoNotDamageWeapon || !(livingEntity instanceof PlayerEntity && livingEntity2 instanceof PlayerEntity)
         ) {
             instance.postDamageEntity(itemStack, livingEntity, livingEntity2);
         }

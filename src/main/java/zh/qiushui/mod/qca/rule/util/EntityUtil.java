@@ -14,19 +14,21 @@ public class EntityUtil {
     public static <E extends Entity> List<E> getEntities(World world, BlockPos pos, EntityType<E> type) {
         return getEntities(world, new Box(pos), type);
     }
+
     public static <E extends Entity> List<E> getEntities(World world, Box box, EntityType<E> type) {
         return world.getEntitiesByType(type, box, player -> true);
     }
 
     @SafeVarargs
     public static <E extends Entity> List<E> getEntities(
-            World world, BlockPos pos, EntityType<? extends E>... types
+        World world, BlockPos pos, EntityType<? extends E>... types
     ) {
         return getEntities(world, new Box(pos), types);
     }
+
     @SafeVarargs
     public static <E extends Entity> List<E> getEntities(
-            World world, Box box, EntityType<? extends E>... types
+        World world, Box box, EntityType<? extends E>... types
     ) {
         List<E> entities = Lists.newArrayList();
         for (EntityType<? extends E> type : types) {
@@ -36,12 +38,13 @@ public class EntityUtil {
     }
 
     public static <E extends Entity> List<E> getEntitiesIf(
-            World world, BlockPos pos, EntityType<E> type, Predicate<E> filter
+        World world, BlockPos pos, EntityType<E> type, Predicate<E> filter
     ) {
         return getEntitiesIf(world, new Box(pos), type, filter);
     }
+
     public static <E extends Entity> List<E> getEntitiesIf(
-            World world, Box box, EntityType<E> type, Predicate<E> filter
+        World world, Box box, EntityType<E> type, Predicate<E> filter
     ) {
         List<E> entities = getEntities(world, box, type);
         entities.removeIf(filter);
@@ -50,13 +53,14 @@ public class EntityUtil {
 
     @SafeVarargs
     public static <E extends Entity> List<E> getEntitiesIf(
-            World world, BlockPos pos, Predicate<E> filter, EntityType<? extends E>... types
+        World world, BlockPos pos, Predicate<E> filter, EntityType<? extends E>... types
     ) {
         return getEntitiesIf(world, new Box(pos), filter, types);
     }
+
     @SafeVarargs
     public static <E extends Entity> List<E> getEntitiesIf(
-            World world, Box box, Predicate<E> filter, EntityType<? extends E>... types
+        World world, Box box, Predicate<E> filter, EntityType<? extends E>... types
     ) {
         List<E> entities = getEntities(world, box, types);
         entities.removeIf(filter);

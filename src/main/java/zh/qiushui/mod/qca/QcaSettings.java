@@ -16,37 +16,37 @@ public class QcaSettings {
     public static final String DEBUG = "debug";
 
     @Rule(
-            categories = {QCA, DEBUG}
+        categories = {QCA, DEBUG}
     )
     public static boolean qcaDebugLog = false;
 
     @Rule(
-            categories = {QCA, COMMAND},
-            options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
-            validators = Validators.CommandLevel.class
+        categories = {QCA, COMMAND},
+        options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
+        validators = Validators.CommandLevel.class
     )
     public static String commandTpPos = "ops";
     @Rule(
-            categories = {QCA, COMMAND},
-            options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
-            validators = Validators.CommandLevel.class
+        categories = {QCA, COMMAND},
+        options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
+        validators = Validators.CommandLevel.class
     )
     public static String commandTpPlayer = "ops";
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL}
+        categories = {QCA, FEATURE, EXPERIMENTAL}
     )
     public static boolean breakDripleafKeepStem = false;
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE},
-            options = {
-                    "enable",
-                    "grasses,dripleaf", "grasses,flowers", "dripleaf,flowers",
-                    "grasses", "dripleaf", "flowers",
-                    "disable"
-            },
-            validators = QcaValidators.PlantTransform.class
+        categories = {QCA, SURVIVAL, FEATURE},
+        options = {
+            "enable",
+            "grasses,dripleaf", "grasses,flowers", "dripleaf,flowers",
+            "grasses", "dripleaf", "flowers",
+            "disable"
+        },
+        validators = QcaValidators.PlantTransform.class
     )
     public static String tallPlantShearToSmall = "disable";
 
@@ -54,18 +54,18 @@ public class QcaSettings {
         Set<String> settings = Set.copyOf(Arrays.stream(tallPlantShearToSmall.split(",")).toList());
 
         if (
-                PlantTransformUtil.SMALL_TALL_GRASSES.containsValue(plant)
-                && (settings.contains("enable") || settings.contains("grasses"))
+            PlantTransformUtil.SMALL_TALL_GRASSES.containsValue(plant)
+            && (settings.contains("enable") || settings.contains("grasses"))
         ) {
             return 1;
         } else if (
-                PlantTransformUtil.SMALL_TALL_DRIPLEAF.containsValue(plant)
-                && (settings.contains("enable") || settings.contains("dripleaf"))
+            PlantTransformUtil.SMALL_TALL_DRIPLEAF.containsValue(plant)
+            && (settings.contains("enable") || settings.contains("dripleaf"))
         ) {
             return 2;
         } else if (
-                PlantTransformUtil.SMALL_TALL_FLOWERS.containsValue(plant)
-                && (settings.contains("enable") || settings.contains("flowers"))
+            PlantTransformUtil.SMALL_TALL_FLOWERS.containsValue(plant)
+            && (settings.contains("enable") || settings.contains("flowers"))
         ) {
             return 3;
         }
@@ -74,8 +74,8 @@ public class QcaSettings {
     }
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE},
-            validators = QcaValidators.TooExpensiveLevel.class
+        categories = {QCA, SURVIVAL, FEATURE},
+        validators = QcaValidators.TooExpensiveLevel.class
     )
     public static int tooExpensiveLevel = 39;
 
@@ -84,52 +84,80 @@ public class QcaSettings {
     }
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE}
+        categories = {QCA, SURVIVAL, FEATURE}
     )
     public static double repairCostMultiplier = 2.0D;
 
     @Rule(
-            categories = {QCA, FEATURE}
+        categories = {QCA, FEATURE}
     )
     public static boolean itemsCanPassThroughChains = false;
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+        categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL},
+        options = {
+            "disabled",
+            "itemFrame", "customName",
+            "itemFrame,customName"
+        },
+        validators = QcaValidators.LimitationSources.class
     )
-    public static boolean easierHopperRestriction = false;
+    public static String easyHopperLimitation = "disabled";
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+        categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL},
+        options = {
+            "disabled",
+            "itemFrame", "customName",
+            "itemFrame,customName"
+        },
+        validators = QcaValidators.LimitationSources.class
     )
-    public static boolean crafterRecipeCanRestrict = false;
+    public static String crafterLimitation = "disabled";
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean canLimit(String setting) {
+        return !setting.contains("disabled");
+    }
+
+    public static boolean canLimitByItemFrame(String setting) {
+        return setting.contains("itemFrame");
+    }
+
+    public static boolean canLimitByCustomName(String setting) {
+        return setting.contains("customName");
+    }
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL},
-            options = {
-                    "add", "multiplyBase", "multiplyTotal",
-                    "addWithoutLevel", "multiplyBaseWithoutLevel", "multiplyTotalWithoutLevel",
-                    "false"
-            },
-            validators = QcaValidators.BeaconIncreaseInteractionRangeMode.class
+        categories = {QCA, FEATURE, EXPERIMENTAL},
+        options = {
+            "add", "multiplyBase", "multiplyTotal",
+            "addWithoutLevel", "multiplyBaseWithoutLevel", "multiplyTotalWithoutLevel",
+            "false"
+        },
+        validators = QcaValidators.BeaconIncreaseInteractionRangeMode.class
     )
     public static String beaconIncreaseInteractionRange = "false";
 
     public static boolean beaconIncreaseIsEnabled() {
         return !beaconIncreaseInteractionRange.equals("false");
     }
+
     public static boolean beaconIncreaseModeIsAdd() {
         return beaconIncreaseInteractionRange.contains("add");
     }
+
     public static boolean beaconIncreaseModeIsBase() {
         return beaconIncreaseInteractionRange.contains("Base");
     }
+
     public static boolean beaconIncreaseModeIsWithoutLevel() {
         return beaconIncreaseInteractionRange.contains("WithoutLevel");
     }
 
     @Rule(
-            categories = {QCA, FEATURE, EXPERIMENTAL},
-            validators = QcaValidators.BeaconIncreaseInteractionRangeValue.class
+        categories = {QCA, FEATURE, EXPERIMENTAL},
+        validators = QcaValidators.BeaconIncreaseInteractionRangeValue.class
     )
     public static double beaconIncreaseInteractionRangeValue = 0.3;
 
@@ -138,23 +166,23 @@ public class QcaSettings {
         return beaconIncreaseModeIsWithoutLevel()
                ? beaconIncreaseInteractionRangeValue
                : (
-                       isAdd
-                       ? (level + beaconIncreaseInteractionRangeValue)
-                       : (level * beaconIncreaseInteractionRangeValue)
+                   isAdd
+                   ? (level + beaconIncreaseInteractionRangeValue)
+                   : (level * beaconIncreaseInteractionRangeValue)
                );
     }
 
     @Rule(
-            categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
+        categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean pvpDoNotDamageEquipment = false;
     @Rule(
-            categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
+        categories = {QCA, PVP, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean pvpDoNotDamageWeapon = false;
 
     @Rule(
-            categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
+        categories = {QCA, SURVIVAL, FEATURE, EXPERIMENTAL}
     )
     public static boolean boneMealDoubleSmallFlowers = false;
 }

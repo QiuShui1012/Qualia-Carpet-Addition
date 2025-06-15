@@ -21,8 +21,9 @@ public interface DoubleWithFertilization extends Fertilizable {
 
     @Override
     default void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        qca_doubled(world, random, pos, state);
+        qca$doubled(world, random, pos, state);
     }
 
-    default void qca_doubled(ServerWorld world, Random random, BlockPos pos, BlockState state) {}
+    default void qca$doubled(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+    }
 }

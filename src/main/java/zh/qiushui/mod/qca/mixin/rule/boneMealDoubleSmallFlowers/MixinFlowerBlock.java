@@ -24,7 +24,7 @@ public abstract class MixinFlowerBlock extends PlantBlock implements DoubleWithF
     }
 
     @Override
-    public void qca_doubled(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+    public void qca$doubled(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         if (QcaSettings.boneMealDoubleSmallFlowers) {
             dropStack(world, pos, new ItemStack(this));
         }

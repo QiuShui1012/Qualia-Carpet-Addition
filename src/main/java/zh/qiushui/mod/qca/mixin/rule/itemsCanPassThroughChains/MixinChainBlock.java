@@ -21,7 +21,7 @@ public abstract class MixinChainBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(
-            BlockState state, BlockView world, BlockPos pos, ShapeContext shapeContext
+        BlockState state, BlockView world, BlockPos pos, ShapeContext shapeContext
     ) {
         if (QcaSettings.itemsCanPassThroughChains && shapeContext instanceof EntityShapeContext ctx) {
             if (ctx.getEntity() instanceof ItemEntity) {
