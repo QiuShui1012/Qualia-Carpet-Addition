@@ -86,7 +86,7 @@ publishMods {
 	github {
 		repository = "QiuShui1012/Qualia-Carpet-Addition"
 		accessToken = providers.environmentVariable("GITHUB_TOKEN")
-		commitish = "main"
+		commitish = "fabric/1.21.2-1.21.3"
 		displayName = project.version
 		tagName = project.version
 	}
