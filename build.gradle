@@ -85,6 +85,6 @@ publishMods {
 		accessToken = providers.environmentVariable("GITHUB_TOKEN")
 		commitish = "fabric/1.21.4"
 		displayName = project.version
-		tagName = project.version
+		tagName = project.version + "_" + commitish
 	}
 }
