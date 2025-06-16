@@ -42,11 +42,11 @@ public class ItemPredicateParser {
                     index++;
                 }
                 case '&' -> {
-                    tokens.add(new Token(TokenType.ALL, "&", index));
+                    tokens.add(new Token(TokenType.AND, "&", index));
                     index++;
                 }
                 case '|' -> {
-                    tokens.add(new Token(TokenType.ANY, "|", index));
+                    tokens.add(new Token(TokenType.OR, "|", index));
                     index++;
                 }
                 case '(' -> {
@@ -127,7 +127,7 @@ public class ItemPredicateParser {
 
             do {
                 this.all().ifPresent(sections::add);
-            } while (this.match(TokenType.ANY));
+            } while (this.match(TokenType.OR));
 
             if (sections.isEmpty()) return Optional.empty();
             if (sections.size() == 1) return Optional.of(sections.getFirst());
@@ -139,7 +139,7 @@ public class ItemPredicateParser {
 
             do {
                 this.not().ifPresent(sections::add);
-            } while (this.match(TokenType.ALL));
+            } while (this.match(TokenType.AND));
 
             if (sections.isEmpty()) return Optional.empty();
             if (sections.size() == 1) return Optional.of(sections.getFirst());

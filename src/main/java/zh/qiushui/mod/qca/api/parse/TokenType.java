@@ -2,8 +2,8 @@ package zh.qiushui.mod.qca.api.parse;
 
 enum TokenType {
     NOT,
-    ALL,
-    ANY,
+    AND,
+    OR,
     LEFT_PAREN,
     RIGHT_PAREN,
     ID,
