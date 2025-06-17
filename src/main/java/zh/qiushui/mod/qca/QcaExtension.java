@@ -41,7 +41,6 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
     public void registerCommands(
         CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext
     ) {
-        TpCommands.register(dispatcher);
     }
 
     @Override
