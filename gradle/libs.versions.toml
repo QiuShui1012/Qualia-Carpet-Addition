@@ -7,13 +7,13 @@ fabric-loader = "0.16.14"
 mappings-yarn = "1.21.3+build.2"
 
 # Dependency Properties
-fabric-api = "0.110.0+1.21.3"
+fabric-api = "0.114.1+1.21.3"
 fabric-carpet = "1.21.2-1.4.158+v241022"
 
 lombok = "1.18.30"
 
 # Gradle Plugin Properties
-fabric-loom = "1.8-SNAPSHOT"
+fabric-loom = "1.10-SNAPSHOT"
 modpublish = "0.8.4"
 
 [libraries]
