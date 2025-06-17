@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
@@ -42,7 +41,7 @@ public abstract class MixinCrafterBlock {
     @Final
     private static EnumProperty<Orientation> ORIENTATION;
     @Unique
-    private Section section = null;
+    private Section limitation = null;
 
     @Inject(
         method = "scheduledTick",
@@ -54,7 +53,7 @@ public abstract class MixinCrafterBlock {
                      + "Lnet/minecraft/util/math/BlockPos;)V")
     )
     @SuppressWarnings("LoggingSimilarMessage")
-    private void qca$updateRestriction(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    private void qca$updateLimitation(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return;
         List<Section> sections = new ArrayList<>();
         if (QcaSettings.canLimitByItemFrame(QcaSettings.crafterLimitation)) {
@@ -77,27 +76,27 @@ public abstract class MixinCrafterBlock {
         }
 
         if (sections.isEmpty()) {
-            this.section = null;
+            this.limitation = null;
             if (QcaSettings.qcaDebugLog) {
                 QcaExtension.LOGGER.debug("A crafter located at {} reset its restrictor.", pos);
             }
             return;
         }
         if (sections.size() > 1) {
-            this.section = new AllSection(sections);
+            this.limitation = new AllSection(sections);
         }
-        this.section = sections.getFirst();
+        this.limitation = sections.getFirst();
         if (QcaSettings.qcaDebugLog) {
-            QcaExtension.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.section);
+            QcaExtension.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.limitation);
         }
     }
 
     @ModifyExpressionValue(
         method = "craft",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 0))
-    private boolean qca$restrictResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
+    private boolean qca$limitResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
         if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return isEmpty;
-        boolean matched = this.section.test(stack);
+        boolean matched = this.limitation.test(stack);
         if (QcaSettings.qcaDebugLog) {
             QcaExtension.LOGGER.debug(
                 "A crafter just limited. Input: {}, Result: {}",
