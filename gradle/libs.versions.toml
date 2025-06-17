@@ -1,14 +1,14 @@
 [versions]
 
 # Enviroment Properties
-minecraft = "1.21.5"
+minecraft = "1.21.6"
 fabric-loader = "0.16.14"
 
-mappings-yarn = "1.21.5+build.1"
+mappings-yarn = "1.21.6+build.1"
 
 # Dependency Properties
-fabric-api = "0.127.0+1.21.5"
-fabric-carpet = "1.21.5-1.4.169+v250325"
+fabric-api = "0.127.0+1.21.6"
+fabric-carpet = "1.21.6-1.4.176+v250617"
 
 lombok = "1.18.30"
 

@@ -22,7 +22,7 @@ public class BeaconUtil {
     }
 
     public static void addBeaconIncreaseModifiersForPlayer(PlayerEntity player, int level) {
-        if (player != null && player.isAlive() && player.getEntityWorld() != null) {
+        if (player != null && player.isAlive() && player.getWorld() != null) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE))
                 .overwritePersistentModifier(InteractionRangeEntityAttributeModifiers.getBeaconBlockRangeModifier(level));
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE))
@@ -35,7 +35,7 @@ public class BeaconUtil {
     }
 
     public static void removeBeaconIncreaseModifiersForPlayer(PlayerEntity player) {
-        if (player != null && player.isAlive() && player.getEntityWorld() != null) {
+        if (player != null && player.isAlive() && player.getWorld() != null) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE))
                 .removeModifier(InteractionRangeEntityAttributeModifiers.BEACON_BLOCK_RANGE_MODIFIER_IDENTIFIER);
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.ENTITY_INTERACTION_RANGE))
