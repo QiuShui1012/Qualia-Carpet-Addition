@@ -41,7 +41,7 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
     @Unique
     private Text customNameCache = null;
     @Unique
-    private Section section = null;
+    private Section limitation = null;
 
     protected MixinHopperBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -58,17 +58,17 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
     }
 
     @Override
-    public Section qca$getSection() {
-        return this.section;
+    public Section qca$getLimitation() {
+        return this.limitation;
     }
 
     @Override
-    public void qca$setSection(Section section) {
-        this.section = section;
+    public void qca$setLimitation(Section limitation) {
+        this.limitation = limitation;
     }
 
     @Inject(method = "serverTick", at = @At("TAIL"))
-    private static void qca$updateRestrictionOnTick(
+    private static void qca$updateLimitationOnTick(
         World world, BlockPos pos, BlockState state, HopperBlockEntity hopper, CallbackInfo ci
     ) {
         if (!QcaSettings.canLimit(QcaSettings.easyHopperLimitation)) return;
@@ -100,9 +100,9 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
                 });
         }
         if (sections.size() > 1) {
-            hopper.qca$setSection(new AllSection(sections));
+            hopper.qca$setLimitation(new AllSection(sections));
         } else if (sections.size() == 1) {
-            hopper.qca$setSection(sections.getFirst());
+            hopper.qca$setLimitation(sections.getFirst());
         }
     }
 
@@ -114,10 +114,10 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
                      + "canTransferTo(Lnet/minecraft/inventory/Inventory;"
                      + "ILnet/minecraft/item/ItemStack;)Z"
         ))
-    private static boolean qca$restrictExtract(
+    private static boolean qca$limitExtract(
         Inventory instance, Inventory inventory, int i, ItemStack stack, Operation<Boolean> original
     ) {
-        return original.call(instance, inventory, i, stack) && qca$restrict(inventory, stack);
+        return original.call(instance, inventory, i, stack) && qca$limit(inventory, stack);
     }
 
     @WrapOperation(
@@ -127,14 +127,14 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
             target = "Lnet/minecraft/inventory/Inventory;"
                      + "isValid(ILnet/minecraft/item/ItemStack;)Z"
         ))
-    private static boolean qca$restrictInsert(Inventory instance, int i, ItemStack stack, Operation<Boolean> original) {
-        return original.call(instance, i, stack) && qca$restrict(instance, stack);
+    private static boolean qca$limitInsert(Inventory instance, int i, ItemStack stack, Operation<Boolean> original) {
+        return original.call(instance, i, stack) && qca$limit(instance, stack);
     }
 
     @Unique
-    private static boolean qca$restrict(Inventory inventory, ItemStack stack) {
+    private static boolean qca$limit(Inventory inventory, ItemStack stack) {
         return !QcaSettings.canLimit(QcaSettings.easyHopperLimitation)
                || !(inventory instanceof HopperBlockEntity hopper)
-               || hopper.qca$getSection().test(stack);
+               || hopper.qca$getLimitation().test(stack);
     }
 }
