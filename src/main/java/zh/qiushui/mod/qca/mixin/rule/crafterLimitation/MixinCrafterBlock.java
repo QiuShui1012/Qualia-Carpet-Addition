@@ -26,8 +26,8 @@ import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.api.parse.ItemPredicateParser;
 import zh.qiushui.mod.qca.api.section.AllSection;
-import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.AnySection;
+import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.Section;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 

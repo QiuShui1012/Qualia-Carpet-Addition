@@ -7,7 +7,9 @@ import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 import java.util.Arrays;
 import java.util.Set;
 
-import static carpet.api.settings.RuleCategory.*;
+import static carpet.api.settings.RuleCategory.EXPERIMENTAL;
+import static carpet.api.settings.RuleCategory.FEATURE;
+import static carpet.api.settings.RuleCategory.SURVIVAL;
 
 public class QcaSettings {
     public static final String QCA = "qca";
