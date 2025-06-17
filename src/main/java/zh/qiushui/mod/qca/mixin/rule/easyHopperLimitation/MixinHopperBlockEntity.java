@@ -1,6 +1,8 @@
 package zh.qiushui.mod.qca.mixin.rule.easyHopperLimitation;
 
 import com.google.common.collect.Lists;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.HopperBlockEntity;
@@ -105,7 +107,7 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
         }
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "canExtract",
         at = @At(
             value = "INVOKE",
@@ -113,19 +115,21 @@ public abstract class MixinHopperBlockEntity extends LockableContainerBlockEntit
                      + "canTransferTo(Lnet/minecraft/inventory/Inventory;"
                      + "ILnet/minecraft/item/ItemStack;)Z"
         ))
-    private static boolean qca$restrictExtract(Inventory instance, Inventory inventory, int i, ItemStack itemStack) {
-        return instance.canTransferTo(inventory, i, itemStack) && qca$restrict(inventory, itemStack);
+    private static boolean qca$restrictExtract(
+        Inventory instance, Inventory inventory, int i, ItemStack stack, Operation<Boolean> original
+    ) {
+        return original.call(instance, inventory, i, stack) && qca$restrict(inventory, stack);
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "canInsert",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/inventory/Inventory;"
                      + "isValid(ILnet/minecraft/item/ItemStack;)Z"
         ))
-    private static boolean qca$restrictInsert(Inventory instance, int i, ItemStack itemStack) {
-        return instance.isValid(i, itemStack) && qca$restrict(instance, itemStack);
+    private static boolean qca$restrictInsert(Inventory instance, int i, ItemStack stack, Operation<Boolean> original) {
+        return original.call(instance, i, stack) && qca$restrict(instance, stack);
     }
 
     @Unique
