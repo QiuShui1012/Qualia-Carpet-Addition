@@ -4,10 +4,6 @@
 
   "carpet.rule.qcaDebugLog.name": "QCA Debug日志",
   "carpet.rule.qcaDebugLog.desc": "向debug日志打印更多debug信息。",
-  "carpet.rule.commandTpPos.name": "/tppos 命令",
-  "carpet.rule.commandTpPos.desc": "/tp 命令，但是只能将一个实体传送到一个坐标。",
-  "carpet.rule.commandTpPlayer.name": "/tpplayer 命令",
-  "carpet.rule.commandTpPlayer.desc": "/tp 命令，但是只能将一个玩家传送到另一个玩家。",
   "carpet.rule.tallPlantShearToSmall.name": "高植物可剪成其小型变种",
   "carpet.rule.tallPlantShearToSmall.desc": "允许玩家将高植物剪成或与剪刀制作为它们的小型“变种”。注意此处的“变种”仅为游戏内相似用途的合并，与现实中的植物无关系。",
   "carpet.rule.breakDripleafKeepStem.name": "破坏大型垂滴叶保留茎",
