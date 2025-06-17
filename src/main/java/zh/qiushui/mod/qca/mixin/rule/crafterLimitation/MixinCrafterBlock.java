@@ -1,6 +1,8 @@
 package zh.qiushui.mod.qca.mixin.rule.crafterLimitation;
 
 import com.google.common.collect.Lists;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CrafterBlock;
 import net.minecraft.block.entity.CrafterBlockEntity;
@@ -19,14 +21,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zh.qiushui.mod.qca.QcaExtension;
 import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.api.parse.ItemPredicateParser;
 import zh.qiushui.mod.qca.api.section.AllSection;
-import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.AnySection;
+import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.Section;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 
@@ -90,16 +91,16 @@ public abstract class MixinCrafterBlock {
         }
     }
 
-    @Redirect(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"))
-    private boolean qca$restrictResult(ItemStack instance) {
-        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return instance.isEmpty();
-        boolean isEmpty = instance.isEmpty();
-        boolean matched = this.section.test(instance);
+    @ModifyExpressionValue(
+        method = "craft",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 0))
+    private boolean qca$restrictResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
+        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return isEmpty;
+        boolean matched = this.section.test(stack);
         if (QcaSettings.qcaDebugLog) {
             QcaExtension.LOGGER.debug(
                 "A crafter just limited. Input: {}, Result: {}",
-                instance,
-                isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
+                stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
             );
         }
         return isEmpty || !matched;
