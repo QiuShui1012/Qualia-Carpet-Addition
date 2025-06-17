@@ -1,7 +1,6 @@
 package zh.qiushui.mod.qca;
 
 import carpet.api.settings.Rule;
-import carpet.api.settings.Validators;
 import net.minecraft.block.Block;
 import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 
@@ -19,19 +18,6 @@ public class QcaSettings {
         categories = {QCA, DEBUG}
     )
     public static boolean qcaDebugLog = false;
-
-    @Rule(
-        categories = {QCA, COMMAND},
-        options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
-        validators = Validators.CommandLevel.class
-    )
-    public static String commandTpPos = "ops";
-    @Rule(
-        categories = {QCA, COMMAND},
-        options = {"ops", "0", "1", "2", "3", "4", "true", "false"},
-        validators = Validators.CommandLevel.class
-    )
-    public static String commandTpPlayer = "ops";
 
     @Rule(
         categories = {QCA, FEATURE, EXPERIMENTAL}
