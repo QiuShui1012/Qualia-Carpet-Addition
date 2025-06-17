@@ -11,10 +11,10 @@ public interface HopperCache {
     default void qca$setCache(Text cache) {
     }
 
-    default Section qca$getSection() {
+    default Section qca$getLimitation() {
         return null;
     }
 
-    default void qca$setSection(Section section) {
+    default void qca$setLimitation(Section section) {
     }
 }
