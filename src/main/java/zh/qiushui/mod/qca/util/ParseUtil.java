@@ -2,7 +2,7 @@ package zh.qiushui.mod.qca.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.ServerRecipeManager;
+import net.minecraft.recipe.RecipeManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -24,13 +24,13 @@ public class ParseUtil {
 
         return Optional.ofNullable(Identifier.tryParse(idRaw))
             .map(id -> TagKey.of(RegistryKeys.ITEM, id))
-            .filter(tag -> Registries.ITEM.streamTagKeys().anyMatch(tagKey -> tagKey.equals(tag)));
+            .filter(tag -> Registries.ITEM.streamTags().anyMatch(tagKey -> tagKey.equals(tag)));
     }
 
-    public static Optional<RecipeEntry<?>> parseCraftingRecipe(ServerRecipeManager manager, String idRaw) {
+    public static Optional<RecipeEntry<?>> parseCraftingRecipe(RecipeManager manager, String idRaw) {
         return Optional.ofNullable(Identifier.tryParse(idRaw))
             .flatMap(identifier -> manager.values().stream()
-                .filter(entry -> entry.id().getValue().equals(identifier))
+                .filter(entry -> entry.id().equals(identifier))
                 .findFirst());
     }
 }
