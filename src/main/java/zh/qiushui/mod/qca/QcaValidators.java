@@ -3,7 +3,7 @@ package zh.qiushui.mod.qca;
 import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Validator;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -14,9 +14,7 @@ public class QcaValidators {
         private static final Set<String> OPTIONS = Set.of("enable", "grasses", "dripleaf", "flowers", "disable");
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
+        public String validate(@Nullable CommandSourceStack source, CarpetRule<String> carpetRule, String newValue, String userInput) {
             String[] options = newValue.trim().split(",");
             return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
         }
@@ -29,9 +27,7 @@ public class QcaValidators {
 
     public static class TooExpensiveLevel extends Validator<Integer> {
         @Override
-        public Integer validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<Integer> carpetRule, Integer newValue, String userInput
-        ) {
+        public Integer validate(@Nullable CommandSourceStack source, CarpetRule<Integer> carpetRule, Integer newValue, String userInput) {
             return newValue < -1 ? 39 : newValue;
         }
 
@@ -45,9 +41,7 @@ public class QcaValidators {
         private static final Set<String> OPTIONS = Set.of("disabled", "itemFrame", "customName");
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
+        public String validate(@Nullable CommandSourceStack source, CarpetRule<String> carpetRule, String newValue, String userInput) {
             String[] options = newValue.trim().split(",");
             return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
         }
@@ -66,9 +60,7 @@ public class QcaValidators {
         );
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
+        public String validate(@Nullable CommandSourceStack source, CarpetRule<String> carpetRule, String newValue, String userInput) {
             return !MODES.contains(newValue) ? null : newValue;
         }
 
@@ -80,10 +72,7 @@ public class QcaValidators {
 
     public static class BeaconIncreaseInteractionRangeValue extends Validator<Double> {
         @Override
-        public Double validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<Double> carpetRule,
-            Double newValue, String userInput
-        ) {
+        public Double validate(@Nullable CommandSourceStack source, CarpetRule<Double> carpetRule, Double newValue, String userInput) {
             return (QcaSettings.beaconIncreaseIsEnabled() && newValue < 0) ? 0 : newValue;
         }
 

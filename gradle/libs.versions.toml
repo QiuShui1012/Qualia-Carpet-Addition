@@ -4,28 +4,23 @@
 minecraft = "1.21.5"
 fabric-loader = "0.16.14"
 
-mappings-yarn = "1.21.5+build.1"
-
 # Dependency Properties
 fabric-api = "0.127.0+1.21.5"
 fabric-carpet = "1.21.5-1.4.169+v250325"
 
-lombok = "1.18.30"
-
 # Gradle Plugin Properties
 fabric-loom = "1.10-SNAPSHOT"
+lombok = "8.7.1"
 modpublish = "0.8.4"
 
 [libraries]
 
 # Common
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
 
 # Fabric
 fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
 fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
-mappings-yarn = { group = "net.fabricmc", name = "yarn", version.ref = "mappings-yarn" }
 
 # Carpet
 fabric-carpet = { group = "carpet", name = "fabric-carpet", version.ref = "fabric-carpet" }
@@ -37,4 +32,5 @@ fabric = ["fabric-loader", "fabric-api"]
 [plugins]
 
 fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
 modpublish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "modpublish"}
