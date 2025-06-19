@@ -1,5 +1,5 @@
 ## What's new
-- **Fixed the wrong Minecraft version range in `fabric.mod.json`**
+- **Fixed hopper cannot be limited by item frame**
 -----------------------------------------------------------------
 ## 新更改
-- **修复了 `fabric.mod.json` 中的Minecraft版本范围错误的问题**
+- **修复了漏斗无法被物品展示框限类的问题**

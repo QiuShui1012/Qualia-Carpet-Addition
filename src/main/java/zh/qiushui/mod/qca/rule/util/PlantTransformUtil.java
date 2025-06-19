@@ -1,8 +1,8 @@
 package zh.qiushui.mod.qca.rule.util;
 
 import com.google.common.collect.ImmutableListMultimap;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class PlantTransformUtil {
     public static final ImmutableListMultimap<Block, Block> SMALL_TALL_GRASSES = ImmutableListMultimap.of(
