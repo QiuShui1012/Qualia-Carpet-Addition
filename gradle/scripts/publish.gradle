@@ -10,22 +10,22 @@ publishMods {
         projectSlug = "qualia-carpet-addition"
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
         requires("bedsheet")
-        minecraftVersions.add("1.21")
-        minecraftVersions.add("1.21.1")
+        minecraftVersions.add("1.21.2")
+        minecraftVersions.add("1.21.3")
         displayName = rootProject.version
     }
     modrinth {
         projectId = "JyI4tI00"
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         requires("bedsheet")
-        minecraftVersions.add("1.21")
-        minecraftVersions.add("1.21.1")
+        minecraftVersions.add("1.21.2")
+        minecraftVersions.add("1.21.3")
         displayName = rootProject.version
     }
     github {
         repository = "QiuShui1012/Qualia-Carpet-Addition"
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        commitish = "neo-bs/1.21-1.21.1"
+        commitish = "neo-bs/1.21.2-1.21.3"
         displayName = project.version
         tagName = project.version
     }
