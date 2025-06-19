@@ -64,9 +64,9 @@ file="META-INF/accesstransformer.cfg"
     side="BOTH"
 
 [[dependencies."${mod_id}"]]
-    modId="rolling_gate"
+    modId="bedsheet"
     mandatory=true
-    versionRange="[1.0.0,)"
+    versionRange="[0.2.1,)"
     ordering="NONE"
     side="BOTH"
 

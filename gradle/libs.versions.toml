@@ -7,7 +7,7 @@ neoforge = "21.1.180"
 parchment = "1.21.1,2024.11.17"
 
 # Dependency Properties
-rollinggate = "1.1.0+build.55"
+bedsheet = "6425898-sources-6425899"
 
 # Gradle Plugin Properties
 mdg = "2.0.95"
@@ -17,7 +17,7 @@ modpublish = "0.8.4"
 [libraries]
 
 # NeoForge
-rollinggate = { group = "dev.anvilcraft.rg", name = "RollingGate", version.ref = "rollinggate" }
+bedsheet = { group = "curse.maven", name = "bedsheet-1193851", version.ref = "bedsheet" }
 
 [plugins]
 

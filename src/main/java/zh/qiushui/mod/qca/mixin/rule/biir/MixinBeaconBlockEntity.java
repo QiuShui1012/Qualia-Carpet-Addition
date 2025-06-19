@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.beaconIncreaseInteractionRange;
+package zh.qiushui.mod.qca.mixin.rule.biir;
 
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import zh.qiushui.mod.qca.Qca;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaExtension;
+import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.BeaconUtil;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.IncreaseInteractionRange;
@@ -43,9 +43,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerIdentifier(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
         BeaconUtil.TASKS.register(blockPos);
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("Tried to register an identifier to the beacon task manager.");
-        }
+        QcaExtension.debugLog("Tried to register an identifier to the beacon task manager.");
     }
 
     @Inject(
@@ -61,7 +59,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     private static void qca$increasePlayersInteractionRange(
         Level level, BlockPos pos, BlockState state, BeaconBlockEntity beacon, CallbackInfo ci
     ) {
-        if (QcaServerRules.beaconIncreaseIsEnabled()) {
+        if (QcaSettings.beaconIncreaseIsEnabled()) {
             qca$increasePlayersInteractionRange(level, pos, beacon);
         }
     }
@@ -72,9 +70,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
             BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.getBlockPos(), player);
         }
         BeaconUtil.TASKS.remove(this.getBlockPos());
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("Tried to remove this identifier from the beacon task manager.");
-        }
+        QcaExtension.debugLog("Tried to remove this identifier from the beacon task manager.");
     }
 
     @Unique
@@ -89,18 +85,14 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
             for (Player player : ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers()) {
                 BeaconUtil.removeBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player);
             }
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("(Tick) Tried to remove the modifier from the increased players.");
-            }
+            QcaExtension.debugLog("(Tick) Tried to remove the modifier from the increased players.");
 
             for (Player player : inRangePlayers) {
                 BeaconUtil.addBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player, levels);
 
                 ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers().add(player);
             }
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("(Tick) Tried to add the modifier to the players in range.");
-            }
+            QcaExtension.debugLog("(Tick) Tried to add the modifier to the players in range.");
         }
     }
 }

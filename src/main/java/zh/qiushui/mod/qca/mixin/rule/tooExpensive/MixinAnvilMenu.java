@@ -7,23 +7,23 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaSettings;
 
 @Mixin(AnvilMenu.class)
 public class MixinAnvilMenu {
     @ModifyConstant(method = "createResult", constant = @Constant(intValue = 40, ordinal = 1))
     private int qca$modifySecondForty(int constant) {
-        return QcaServerRules.getTooExpensiveLevel() + 1;
+        return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @ModifyConstant(method = "createResult", constant = @Constant(intValue = 39))
     private int qca$modifyThirtyNine(int constant) {
-        return QcaServerRules.getTooExpensiveLevel();
+        return QcaSettings.getTooExpensiveLevel();
     }
 
     @ModifyConstant(method = "createResult", constant = @Constant(intValue = 40, ordinal = 2))
     private int qca$modifyThirdForty(int constant) {
-        return QcaServerRules.getTooExpensiveLevel() + 1;
+        return QcaSettings.getTooExpensiveLevel() + 1;
     }
 
     @Inject(method = "calculateIncreasedRepairCost", at = @At("HEAD"), cancellable = true)
@@ -31,7 +31,7 @@ public class MixinAnvilMenu {
         cir.setReturnValue(
             Math.max(
                 0, (int) Math.ceil(Math.min(
-                    (long) i * QcaServerRules.repairCostMultiplier + 1L,
+                    (long) i * QcaSettings.repairCostMultiplier + 1L,
                     2147483647L
                 ))
             )

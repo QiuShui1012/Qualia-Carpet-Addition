@@ -5,4 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Predicate;
 
 public interface Section extends Predicate<ItemStack> {
+    static Section empty() {
+        return stack -> true;
+    }
 }

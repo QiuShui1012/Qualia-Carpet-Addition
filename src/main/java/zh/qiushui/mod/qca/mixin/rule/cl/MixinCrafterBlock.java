@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.crafterLimitation;
+package zh.qiushui.mod.qca.mixin.rule.cl;
 
 import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -22,8 +22,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import zh.qiushui.mod.qca.Qca;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaExtension;
+import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.api.parse.ItemPredicateParser;
 import zh.qiushui.mod.qca.api.section.AllSection;
 import zh.qiushui.mod.qca.api.section.AnySection;
@@ -39,7 +39,7 @@ import java.util.Optional;
 public abstract class MixinCrafterBlock {
     @Shadow @Final private static EnumProperty<FrontAndTop> ORIENTATION;
     @Unique
-    private Section qca$limitation = null;
+    private Section qca$limitation = Section.empty();
 
     @Inject(
         method = "tick",
@@ -52,9 +52,9 @@ public abstract class MixinCrafterBlock {
     )
     @SuppressWarnings("LoggingSimilarMessage")
     private void qca$updateLimitation(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (!QcaServerRules.canLimit(QcaServerRules.crafterLimitation)) return;
+        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return;
         List<Section> sections = new ArrayList<>();
-        if (QcaServerRules.canLimitByItemFrame(QcaServerRules.crafterLimitation)) {
+        if (QcaSettings.canLimitByItemFrame(QcaSettings.crafterLimitation)) {
             List<ItemFrame> frames = EntityUtil.getEntitiesIf(
                 level, pos.relative(state.getValue(ORIENTATION).top()),
                 frame -> !frame.getDirection().equals(state.getValue(ORIENTATION).top()) || frame.getItem().isEmpty(),
@@ -64,7 +64,7 @@ public abstract class MixinCrafterBlock {
                 sections.add(new AnySection(Lists.transform(frames, frame -> new ItemSection(frame.getItem()))));
             }
         }
-        if (QcaServerRules.canLimitByCustomName(QcaServerRules.crafterLimitation)) {
+        if (QcaSettings.canLimitByCustomName(QcaSettings.crafterLimitation)) {
             if (level.getBlockEntity(pos) instanceof CrafterBlockEntity entity) {
                 Optional.ofNullable(entity.getCustomName())
                     .map(Component::getString)
@@ -75,32 +75,26 @@ public abstract class MixinCrafterBlock {
 
         if (sections.isEmpty()) {
             this.qca$limitation = null;
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("A crafter located at {} reset its restrictor.", pos);
-            }
+            QcaExtension.debugLog("A crafter located at {} reset its restrictor.", pos);
             return;
         }
         if (sections.size() > 1) {
             this.qca$limitation = new AllSection(sections);
         }
         this.qca$limitation = sections.getFirst();
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.qca$limitation);
-        }
+        QcaExtension.debugLog("A crafter located at {} updated its limit source {}.", pos, this.qca$limitation);
     }
 
     @ModifyExpressionValue(
         method = "dispenseFrom",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0))
     private boolean qca$limitResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
-        if (!QcaServerRules.canLimit(QcaServerRules.crafterLimitation)) return isEmpty;
+        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return isEmpty;
         boolean matched = this.qca$limitation.test(stack);
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug(
-                "A crafter just limited. Input: {}, Result: {}",
-                stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
-            );
-        }
+        QcaExtension.debugLog(
+            "A crafter just limited. Input: {}, Result: {}",
+            stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
+        );
         return isEmpty || !matched;
     }
 }

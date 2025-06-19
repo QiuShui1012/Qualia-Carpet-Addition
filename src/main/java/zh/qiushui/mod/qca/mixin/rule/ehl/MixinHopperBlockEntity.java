@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.easyHopperLimitation;
+package zh.qiushui.mod.qca.mixin.rule.ehl;
 
 import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import zh.qiushui.mod.qca.Qca;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaExtension;
+import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.api.parse.ItemPredicateParser;
 import zh.qiushui.mod.qca.api.section.AllSection;
 import zh.qiushui.mod.qca.api.section.AnySection;
@@ -41,7 +41,7 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
     @Unique
     private Component qca$customNameCache = null;
     @Unique
-    private Section qca$limitation = null;
+    private Section qca$limitation = Section.empty();
 
     protected MixinHopperBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -71,31 +71,26 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
     private static void qca$updateLimitationOnTick(
         Level level, BlockPos pos, BlockState state, HopperBlockEntity hopper, CallbackInfo ci
     ) {
-        if (!QcaServerRules.canLimit(QcaServerRules.easyHopperLimitation)) return;
+        if (!QcaSettings.canLimit(QcaSettings.easyHopperLimitation)) return;
         List<Section> sections = new ArrayList<>();
-        if (QcaServerRules.canLimitByItemFrame(QcaServerRules.easyHopperLimitation)) {
-            Direction facing = UnsafeUtil.<HopperAccessor>cast(hopper).qca$getFacing();
+        if (QcaSettings.canLimitByItemFrame(QcaSettings.easyHopperLimitation)) {
             List<ItemFrame> frames = EntityUtil.getEntitiesIf(
-                level, pos.relative(facing),
-                frame -> !frame.getDirection().equals(facing) || frame.getItem().isEmpty(),
+                level, pos.above(),
+                frame -> !frame.getDirection().equals(Direction.UP) || frame.getItem().isEmpty(),
                 EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME
             );
             if (!frames.isEmpty()) {
                 sections.add(new AnySection(Lists.transform(frames, frame -> new ItemSection(frame.getItem()))));
-                if (QcaServerRules.qcaDebugLog) {
-                    Qca.LOGGER.debug("(Tick) Tried to set the restrictor from the item frame.");
-                }
+                QcaExtension.debugLog("(Tick) Tried to set the restrictor from the item frame.");
             }
         }
-        if (QcaServerRules.canLimitByCustomName(QcaServerRules.easyHopperLimitation)) {
+        if (QcaSettings.canLimitByCustomName(QcaSettings.easyHopperLimitation)) {
             Optional.ofNullable(hopper.getCustomName())
                 .ifPresent(name -> {
                     if (!Objects.equals(UnsafeUtil.<HopperCache>cast(hopper).qca$getCache(), name)) {
                         UnsafeUtil.<HopperCache>cast(hopper).qca$setCache(name);
                         sections.add(ItemPredicateParser.parseItemPredicate(name.getString()).orElse(null));
-                        if (QcaServerRules.qcaDebugLog) {
-                            Qca.LOGGER.debug("(Tick) Tried to set the restrictor from the custom name.");
-                        }
+                        QcaExtension.debugLog("(Tick) Tried to set the restrictor from the custom name.");
                     }
                 });
         }
@@ -130,7 +125,7 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
 
     @Unique
     private static boolean qca$limit(Container inventory, ItemStack stack) {
-        return !QcaServerRules.canLimit(QcaServerRules.easyHopperLimitation)
+        return !QcaSettings.canLimit(QcaSettings.easyHopperLimitation)
                || !(inventory instanceof HopperBlockEntity hopper)
                || UnsafeUtil.<HopperCache>cast(hopper).qca$getLimitation().test(stack);
     }

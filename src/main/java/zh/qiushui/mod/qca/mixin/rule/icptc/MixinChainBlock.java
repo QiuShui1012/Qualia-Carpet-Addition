@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.itemsCanPassThroughChains;
+package zh.qiushui.mod.qca.mixin.rule.icptc;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -12,7 +12,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaSettings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -26,7 +26,7 @@ public abstract class MixinChainBlock extends Block {
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (QcaServerRules.itemsCanPassThroughChains && context instanceof EntityCollisionContext ctx) {
+        if (QcaSettings.itemsCanPassThroughChains && context instanceof EntityCollisionContext ctx) {
             if (ctx.getEntity() instanceof ItemEntity) {
                 return Shapes.empty();
             }

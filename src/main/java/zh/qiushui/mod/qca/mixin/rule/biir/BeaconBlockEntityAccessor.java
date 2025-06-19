@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.beaconIncreaseInteractionRange;
+package zh.qiushui.mod.qca.mixin.rule.biir;
 
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;

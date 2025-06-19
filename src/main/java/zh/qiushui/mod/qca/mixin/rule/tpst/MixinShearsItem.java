@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.tallPlantShearToSmall;
+package zh.qiushui.mod.qca.mixin.rule.tpst;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaSettings;
 import zh.qiushui.mod.qca.rule.util.PlantTransformUtil;
 
 @Mixin(ShearsItem.class)
@@ -34,7 +34,7 @@ public abstract class MixinShearsItem {
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
 
-        switch (QcaServerRules.matchTallPlant(block)) {
+        switch (QcaSettings.matchTallPlant(block)) {
             case 1, 3 -> cir.setReturnValue(
                 qca$shearTallPlant(ctx, level, pos, block, state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF))
             );

@@ -1,4 +1,4 @@
-package zh.qiushui.mod.qca.mixin.rule.boneMealDoubleSmallFlowers;
+package zh.qiushui.mod.qca.mixin.rule.bmdsf;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import zh.qiushui.mod.qca.QcaServerRules;
+import zh.qiushui.mod.qca.QcaSettings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -24,7 +24,7 @@ public abstract class MixinFlowerBlock extends BushBlock implements Bonemealable
 
     @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
-        return QcaServerRules.boneMealDoubleSmallFlowers;
+        return QcaSettings.boneMealDoubleSmallFlowers;
     }
 
     @Override
@@ -34,7 +34,7 @@ public abstract class MixinFlowerBlock extends BushBlock implements Bonemealable
 
     @Override
     public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
-        if (QcaServerRules.boneMealDoubleSmallFlowers) {
+        if (QcaSettings.boneMealDoubleSmallFlowers) {
             popResource(level, pos, new ItemStack(this));
         }
     }

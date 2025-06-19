@@ -2,7 +2,7 @@ package zh.qiushui.mod.qca.api.task;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import zh.qiushui.mod.qca.Qca;
+import zh.qiushui.mod.qca.QcaExtension;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,7 +61,7 @@ public class TaskManager<I> {
                     try {
                         consumer.accept(function.call());
                     } catch (Exception e) {
-                        Qca.LOGGER.error("Task didn't run successfully.", e);
+                        QcaExtension.LOGGER.error("Task didn't run successfully.", e);
                     }
                 }, ""
             )
@@ -91,7 +91,7 @@ public class TaskManager<I> {
                     try {
                         consumer.accept(function.call());
                     } catch (Exception e) {
-                        Qca.LOGGER.error("Task didn't run successfully.", e);
+                        QcaExtension.LOGGER.error("Task didn't run successfully.", e);
                     }
                 }, ""
             ), filter
