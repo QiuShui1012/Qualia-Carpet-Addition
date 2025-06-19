@@ -1,13 +1,13 @@
 [versions]
 
 # Enviroment Properties
-minecraft = "1.21.1"
+minecraft = "1.21.3"
 neoforge = "21.1.180"
 
-parchment = "1.21.1,2024.11.17"
+parchment = "1.21.3,2024.12.07"
 
 # Dependency Properties
-bedsheet = "6425898-sources-6425899"
+bedsheet = "6425895-sources-6425896"
 
 # Gradle Plugin Properties
 mdg = "2.0.95"
