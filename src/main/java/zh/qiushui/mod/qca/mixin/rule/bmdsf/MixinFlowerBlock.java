@@ -7,14 +7,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import zh.qiushui.mod.qca.QcaSettings;
 
 @Mixin(FlowerBlock.class)
-public abstract class MixinFlowerBlock extends BushBlock implements BonemealableBlock {
+public abstract class MixinFlowerBlock extends VegetationBlock implements BonemealableBlock {
     protected MixinFlowerBlock(Properties properties) {
         super(properties);
     }
