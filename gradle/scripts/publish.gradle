@@ -1,6 +1,6 @@
 publishMods {
     file = jar.archiveFile
-    additionalFiles.from(tasks.sourcesJar.archiveFile)
+    additionalFiles.from(sourcesJar.archiveFile)
     changelog = file("latest-changelog.md").text
     type = STABLE
     modLoaders.add("neoforge")
