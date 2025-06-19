@@ -1,20 +1,20 @@
 package zh.qiushui.mod.qca.util;
 
-import net.minecraft.item.Item;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.Optional;
 
 public class ParseUtil {
     public static Optional<Item> parseItem(String idRaw) {
-        return Optional.ofNullable(Identifier.tryParse(idRaw))
-            .map(Registries.ITEM::get)
-            .filter(item -> !item.getDefaultStack().isEmpty());
+        return Optional.ofNullable(ResourceLocation.tryParse(idRaw))
+            .map(BuiltInRegistries.ITEM::getValue)
+            .filter(item -> !item.getDefaultInstance().isEmpty());
     }
 
     public static Optional<TagKey<Item>> parseItemTag(String idRaw) {
@@ -22,15 +22,15 @@ public class ParseUtil {
             idRaw = idRaw.substring(1);
         }
 
-        return Optional.ofNullable(Identifier.tryParse(idRaw))
-            .map(id -> TagKey.of(RegistryKeys.ITEM, id))
-            .filter(tag -> Registries.ITEM.streamTagKeys().anyMatch(tagKey -> tagKey.equals(tag)));
+        return Optional.ofNullable(ResourceLocation.tryParse(idRaw))
+            .map(id -> TagKey.create(Registries.ITEM, id))
+            .filter(tag -> BuiltInRegistries.ITEM.listTagIds().anyMatch(tagKey -> tagKey.equals(tag)));
     }
 
-    public static Optional<RecipeEntry<?>> parseCraftingRecipe(ServerRecipeManager manager, String idRaw) {
-        return Optional.ofNullable(Identifier.tryParse(idRaw))
-            .flatMap(identifier -> manager.values().stream()
-                .filter(entry -> entry.id().getValue().equals(identifier))
+    public static Optional<RecipeHolder<?>> parseCraftingRecipe(RecipeManager manager, String idRaw) {
+        return Optional.ofNullable(ResourceLocation.tryParse(idRaw))
+            .flatMap(id -> manager.getRecipes().stream()
+                .filter(holder -> holder.id().location().equals(id))
                 .findFirst());
     }
 }

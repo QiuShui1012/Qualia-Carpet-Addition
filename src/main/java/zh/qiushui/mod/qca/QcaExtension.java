@@ -2,12 +2,9 @@ package zh.qiushui.mod.qca;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.BeaconUtil;
@@ -21,26 +18,13 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-    public static Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     @Override
     public void onInitialize() {
         CarpetServer.manageExtension(this);
-
-        ServerTickEvents.END_WORLD_TICK.register(world -> BeaconUtil.tick());
-    }
-
-    @Override
-    public void onGameStarted() {
-        CarpetServer.settingsManager.parseSettingsClass(QcaSettings.class);
-    }
-
-    @Override
-    public void registerCommands(
-        CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext
-    ) {
     }
 
     @Override
@@ -49,7 +33,29 @@ public class QcaExtension implements CarpetExtension, ModInitializer {
     }
 
     @Override
+    public void onTick(MinecraftServer server) {
+        BeaconUtil.tick();
+    }
+
+    @Override
+    public void onGameStarted() {
+        CarpetServer.settingsManager.parseSettingsClass(QcaSettings.class);
+    }
+
+    @Override
     public Map<String, String> canHasTranslations(String lang) {
         return TranslationsUtil.getTranslations(lang);
+    }
+
+    public static void debugLog(String message) {
+        if (QcaSettings.qcaDebugLog) {
+            QcaExtension.LOGGER.debug(message);
+        }
+    }
+
+    public static void debugLog(String message, Object... args) {
+        if (QcaSettings.qcaDebugLog) {
+            QcaExtension.LOGGER.debug(message, args);
+        }
     }
 }

@@ -1,10 +1,10 @@
 package zh.qiushui.mod.qca.api.parse;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import zh.qiushui.mod.qca.api.section.AllSection;
+import zh.qiushui.mod.qca.api.section.AnySection;
 import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.NotSection;
-import zh.qiushui.mod.qca.api.section.AnySection;
 import zh.qiushui.mod.qca.api.section.Section;
 import zh.qiushui.mod.qca.api.section.TagSection;
 import zh.qiushui.mod.qca.util.ParseUtil;
@@ -160,7 +160,7 @@ public class ItemPredicateParser {
 
             if (this.match(TokenType.ID)) {
                 return ParseUtil.parseItem(this.tokens.get(this.current - 1).value())
-                    .map(Item::getDefaultStack)
+                    .map(Item::getDefaultInstance)
                     .map(ItemSection::new);
             }
             if (this.match(TokenType.TAG)) {
