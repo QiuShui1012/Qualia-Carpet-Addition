@@ -1,5 +1,5 @@
 ## What's new
-- **Add NeoForge 1.21.4 (bedsheet) support**
+- **Add NeoForge 1.21.5 (bedsheet) support**
 -----------------------------------------------------------------
 ## 新更改
-- **添加NeoForge 1.21.4（床单）的支持**
+- **添加NeoForge 1.21.5（床单）的支持**
