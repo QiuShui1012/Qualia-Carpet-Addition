@@ -22,7 +22,8 @@
 	"custom": {
 		"loom:injected_interfaces": {
 			"net/minecraft/class_2580": ["zh/qiushui/mod/qca/rule/util/beaconIncreaseInteractionRange/IncreaseInteractionRange"],
-			"net/minecraft/class_2614": ["zh/qiushui/mod/qca/rule/util/easyHopperLimitation/HopperCache"]
+			"net/minecraft/class_2614": ["zh/qiushui/mod/qca/rule/util/easyHopperLimitation/HopperCache"],
+			"net/minecraft/class_2356": ["zh/qiushui/mod/qca/rule/util/boneMealDoubleSmallFlowers/DoubleWithFertilization"]
 		}
 	},
 	"accessWidener": "qca.accessWidener",
