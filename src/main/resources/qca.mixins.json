@@ -8,7 +8,6 @@
     "rule.boneMealDoubleSmallFlowers.MixinFlowerBlock",
     "rule.breakDripleafKeepStem.MixinBigDripleafStemBlock",
     "rule.crafterLimitation.MixinCrafterBlock",
-    "rule.easyHopperLimitation.HopperAccessor",
     "rule.easyHopperLimitation.MixinHopperBlockEntity",
     "rule.itemsCanPassThroughChains.MixinChainBlock",
     "rule.pvpDoNotDamageEquipment.MixinLivingEntity",

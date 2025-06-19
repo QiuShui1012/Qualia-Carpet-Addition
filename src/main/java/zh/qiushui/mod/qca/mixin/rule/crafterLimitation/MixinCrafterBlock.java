@@ -75,18 +75,14 @@ public abstract class MixinCrafterBlock {
 
         if (sections.isEmpty()) {
             this.qca$limitation = null;
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("A crafter located at {} reset its restrictor.", pos);
-            }
+            Qca.debugLog("A crafter located at {} reset its restrictor.", pos);
             return;
         }
         if (sections.size() > 1) {
             this.qca$limitation = new AllSection(sections);
         }
         this.qca$limitation = sections.getFirst();
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.qca$limitation);
-        }
+        Qca.debugLog("A crafter located at {} updated its limit source {}.", pos, this.qca$limitation);
     }
 
     @ModifyExpressionValue(
@@ -95,12 +91,10 @@ public abstract class MixinCrafterBlock {
     private boolean qca$limitResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
         if (!QcaServerRules.canLimit(QcaServerRules.crafterLimitation)) return isEmpty;
         boolean matched = this.qca$limitation.test(stack);
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug(
-                "A crafter just limited. Input: {}, Result: {}",
-                stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
-            );
-        }
+        Qca.debugLog(
+            "A crafter just limited. Input: {}, Result: {}",
+            stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
+        );
         return isEmpty || !matched;
     }
 }

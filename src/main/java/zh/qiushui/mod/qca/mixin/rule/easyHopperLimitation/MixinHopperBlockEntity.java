@@ -74,17 +74,14 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
         if (!QcaServerRules.canLimit(QcaServerRules.easyHopperLimitation)) return;
         List<Section> sections = new ArrayList<>();
         if (QcaServerRules.canLimitByItemFrame(QcaServerRules.easyHopperLimitation)) {
-            Direction facing = UnsafeUtil.<HopperAccessor>cast(hopper).qca$getFacing();
             List<ItemFrame> frames = EntityUtil.getEntitiesIf(
-                level, pos.relative(facing),
-                frame -> !frame.getDirection().equals(facing) || frame.getItem().isEmpty(),
+                level, pos.above(),
+                frame -> !frame.getDirection().equals(Direction.UP) || frame.getItem().isEmpty(),
                 EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME
             );
             if (!frames.isEmpty()) {
                 sections.add(new AnySection(Lists.transform(frames, frame -> new ItemSection(frame.getItem()))));
-                if (QcaServerRules.qcaDebugLog) {
-                    Qca.LOGGER.debug("(Tick) Tried to set the restrictor from the item frame.");
-                }
+                Qca.debugLog("(Tick) Tried to set the restrictor from the item frame.");
             }
         }
         if (QcaServerRules.canLimitByCustomName(QcaServerRules.easyHopperLimitation)) {
@@ -93,9 +90,7 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
                     if (!Objects.equals(UnsafeUtil.<HopperCache>cast(hopper).qca$getCache(), name)) {
                         UnsafeUtil.<HopperCache>cast(hopper).qca$setCache(name);
                         sections.add(ItemPredicateParser.parseItemPredicate(name.getString()).orElse(null));
-                        if (QcaServerRules.qcaDebugLog) {
-                            Qca.LOGGER.debug("(Tick) Tried to set the restrictor from the custom name.");
-                        }
+                        Qca.debugLog("(Tick) Tried to set the restrictor from the custom name.");
                     }
                 });
         }

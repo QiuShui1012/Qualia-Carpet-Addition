@@ -43,9 +43,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerIdentifier(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
         BeaconUtil.TASKS.register(blockPos);
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("Tried to register an identifier to the beacon task manager.");
-        }
+        Qca.debugLog("Tried to register an identifier to the beacon task manager.");
     }
 
     @Inject(
@@ -72,9 +70,7 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
             BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.getBlockPos(), player);
         }
         BeaconUtil.TASKS.remove(this.getBlockPos());
-        if (QcaServerRules.qcaDebugLog) {
-            Qca.LOGGER.debug("Tried to remove this identifier from the beacon task manager.");
-        }
+        Qca.debugLog("Tried to remove this identifier from the beacon task manager.");
     }
 
     @Unique
@@ -89,18 +85,14 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
             for (Player player : ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers()) {
                 BeaconUtil.removeBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player);
             }
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("(Tick) Tried to remove the modifier from the increased players.");
-            }
+            Qca.debugLog("(Tick) Tried to remove the modifier from the increased players.");
 
             for (Player player : inRangePlayers) {
                 BeaconUtil.addBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player, levels);
 
                 ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers().add(player);
             }
-            if (QcaServerRules.qcaDebugLog) {
-                Qca.LOGGER.debug("(Tick) Tried to add the modifier to the players in range.");
-            }
+            Qca.debugLog("(Tick) Tried to add the modifier to the players in range.");
         }
     }
 }

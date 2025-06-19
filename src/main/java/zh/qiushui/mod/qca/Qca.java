@@ -27,4 +27,16 @@ public class Qca {
     private static void onServerTick(ServerTickEvent.Post event) {
         BeaconUtil.tick();
     }
+
+    public static void debugLog(String message) {
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug(message);
+        }
+    }
+
+    public static void debugLog(String message, Object... args) {
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug(message, args);
+        }
+    }
 }
