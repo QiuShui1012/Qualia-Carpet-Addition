@@ -1,34 +1,37 @@
 package zh.qiushui.mod.qca.mixin.rule.itemsCanPassThroughChains;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChainBlock;
-import net.minecraft.block.EntityShapeContext;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
-import zh.qiushui.mod.qca.QcaSettings;
+import zh.qiushui.mod.qca.QcaServerRules;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 @Mixin(ChainBlock.class)
 public abstract class MixinChainBlock extends Block {
-    public MixinChainBlock(Settings settings) {
-        super(settings);
+    public MixinChainBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public VoxelShape getCollisionShape(
-        BlockState state, BlockView world, BlockPos pos, ShapeContext shapeContext
-    ) {
-        if (QcaSettings.itemsCanPassThroughChains && shapeContext instanceof EntityShapeContext ctx) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (QcaServerRules.itemsCanPassThroughChains && context instanceof EntityCollisionContext ctx) {
             if (ctx.getEntity() instanceof ItemEntity) {
-                return VoxelShapes.empty();
+                return Shapes.empty();
             }
         }
 
-        return super.getCollisionShape(state, world, pos, shapeContext);
+        return super.getCollisionShape(state, level, pos, context);
     }
 }

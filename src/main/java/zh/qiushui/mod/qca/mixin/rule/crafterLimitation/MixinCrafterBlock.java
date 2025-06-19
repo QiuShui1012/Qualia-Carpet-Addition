@@ -3,18 +3,18 @@ package zh.qiushui.mod.qca.mixin.rule.crafterLimitation;
 import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CrafterBlock;
-import net.minecraft.block.entity.CrafterBlockEntity;
-import net.minecraft.block.enums.Orientation;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.FrontAndTop;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.CrafterBlock;
+import net.minecraft.world.level.block.entity.CrafterBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,12 +22,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import zh.qiushui.mod.qca.QcaExtension;
-import zh.qiushui.mod.qca.QcaSettings;
+import zh.qiushui.mod.qca.Qca;
+import zh.qiushui.mod.qca.QcaServerRules;
 import zh.qiushui.mod.qca.api.parse.ItemPredicateParser;
 import zh.qiushui.mod.qca.api.section.AllSection;
-import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.AnySection;
+import zh.qiushui.mod.qca.api.section.ItemSection;
 import zh.qiushui.mod.qca.api.section.Section;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 
@@ -37,68 +37,66 @@ import java.util.Optional;
 
 @Mixin(CrafterBlock.class)
 public abstract class MixinCrafterBlock {
-    @Shadow
-    @Final
-    private static EnumProperty<Orientation> ORIENTATION;
+    @Shadow @Final private static EnumProperty<FrontAndTop> ORIENTATION;
     @Unique
-    private Section limitation = null;
+    private Section qca$limitation = null;
 
     @Inject(
-        method = "scheduledTick",
+        method = "tick",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/block/CrafterBlock;"
-                     + "craft(Lnet/minecraft/block/BlockState;"
-                     + "Lnet/minecraft/server/world/ServerWorld;"
-                     + "Lnet/minecraft/util/math/BlockPos;)V")
+            target = "Lnet/minecraft/world/level/block/CrafterBlock;"
+                     + "dispenseFrom(Lnet/minecraft/world/level/block/state/BlockState;"
+                     + "Lnet/minecraft/server/level/ServerLevel;"
+                     + "Lnet/minecraft/core/BlockPos;)V")
     )
     @SuppressWarnings("LoggingSimilarMessage")
-    private void qca$updateLimitation(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return;
+    private void qca$updateLimitation(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+        if (!QcaServerRules.canLimit(QcaServerRules.crafterLimitation)) return;
         List<Section> sections = new ArrayList<>();
-        if (QcaSettings.canLimitByItemFrame(QcaSettings.crafterLimitation)) {
-            List<ItemFrameEntity> itemFrames = EntityUtil.getEntitiesIf(
-                world, pos.offset(state.get(ORIENTATION).getRotation()),
-                itemFrame -> !itemFrame.getFacing().equals(state.get(ORIENTATION).getRotation()) || itemFrame.getHeldItemStack().isEmpty(),
+        if (QcaServerRules.canLimitByItemFrame(QcaServerRules.crafterLimitation)) {
+            List<ItemFrame> frames = EntityUtil.getEntitiesIf(
+                level, pos.relative(state.getValue(ORIENTATION).top()),
+                frame -> !frame.getDirection().equals(state.getValue(ORIENTATION).top()) || frame.getItem().isEmpty(),
                 EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME
             );
-            if (!itemFrames.isEmpty()) {
-                sections.add(new AnySection(Lists.transform(itemFrames, itemFrame -> new ItemSection(itemFrame.getHeldItemStack()))));
+            if (!frames.isEmpty()) {
+                sections.add(new AnySection(Lists.transform(frames, frame -> new ItemSection(frame.getItem()))));
             }
         }
-        if (QcaSettings.canLimitByCustomName(QcaSettings.crafterLimitation)) {
-            if (world.getBlockEntity(pos) instanceof CrafterBlockEntity entity) {
+        if (QcaServerRules.canLimitByCustomName(QcaServerRules.crafterLimitation)) {
+            if (level.getBlockEntity(pos) instanceof CrafterBlockEntity entity) {
                 Optional.ofNullable(entity.getCustomName())
-                    .map(Text::getString)
+                    .map(Component::getString)
                     .flatMap(ItemPredicateParser::parseItemPredicate)
                     .ifPresent(sections::add);
             }
         }
 
         if (sections.isEmpty()) {
-            this.limitation = null;
-            if (QcaSettings.qcaDebugLog) {
-                QcaExtension.LOGGER.debug("A crafter located at {} reset its restrictor.", pos);
+            this.qca$limitation = null;
+            if (QcaServerRules.qcaDebugLog) {
+                Qca.LOGGER.debug("A crafter located at {} reset its restrictor.", pos);
             }
             return;
         }
         if (sections.size() > 1) {
-            this.limitation = new AllSection(sections);
+            this.qca$limitation = new AllSection(sections);
         }
-        this.limitation = sections.getFirst();
-        if (QcaSettings.qcaDebugLog) {
-            QcaExtension.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.limitation);
+        this.qca$limitation = sections.getFirst();
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug("A crafter located at {} updated its limit source {}.", pos, this.qca$limitation);
         }
     }
 
     @ModifyExpressionValue(
-        method = "craft",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 0))
+        method = "dispenseFrom",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0))
     private boolean qca$limitResult(boolean isEmpty, @Local(ordinal = 0) ItemStack stack) {
-        if (!QcaSettings.canLimit(QcaSettings.crafterLimitation)) return isEmpty;
-        boolean matched = this.limitation.test(stack);
-        if (QcaSettings.qcaDebugLog) {
-            QcaExtension.LOGGER.debug(
+        if (!QcaServerRules.canLimit(QcaServerRules.crafterLimitation)) return isEmpty;
+        boolean matched = this.qca$limitation.test(stack);
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug(
                 "A crafter just limited. Input: {}, Result: {}",
                 stack, isEmpty ? "Failed. The instance is empty." : matched ? "Successfully limited." : "Failed."
             );

@@ -14,7 +14,7 @@
     "rule.pvpDoNotDamageEquipment.MixinLivingEntity",
     "rule.pvpDoNotDamageWeapon.MixinItemStack",
     "rule.tallPlantShearToSmall.MixinShearsItem",
-    "rule.tooExpensive.MixinAnvilScreenHandler"
+    "rule.tooExpensive.MixinAnvilMenu"
   ],
   "injectors": {
     "defaultRequire": 1

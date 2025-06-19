@@ -1,36 +1,37 @@
 plugins {
-	alias libs.plugins.fabric.loom
+	id 'idea'
+	id 'java-library'
+	alias libs.plugins.mdg
+	alias libs.plugins.lombok
 	alias libs.plugins.modpublish
 }
 
 group = project.group
-version = project.version + "-fabric+" + libs.versions.minecraft.get()
+version = project.version + "-neoforge-rg+" + libs.versions.minecraft.get()
 
 base.archivesName = project.archives_name
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven {
-		name "Masa Maven"
-		url "https://masa.dy.fi/maven"
+		name = "Cjsah Maven"
+		url = "https://server.cjsah.net:1002/maven/"
 	}
 }
 
-loom {
-	accessWidenerPath = file("src/main/resources/qca.accessWidener")
-}
-
 dependencies {
-	minecraft libs.minecraft
-	mappings libs.mappings.yarn
-
-	compileOnly libs.lombok
-	annotationProcessor libs.lombok
-
-	modImplementation libs.bundles.fabric
-
-	modImplementation libs.fabric.carpet
+	implementation(libs.rollinggate)
 }
+
+tasks.register('sourcesJar', Jar) {
+	from delombok.outputs.files
+	dependsOn delombok
+	archiveClassifier = "sources"
+}
+
+apply from: "$rootDir/gradle/scripts/mdg.gradle"
+apply from: "$rootDir/gradle/scripts/publish.gradle"
 
 processResources {
 	inputs.property "version", project.version
@@ -40,54 +41,12 @@ processResources {
 	}
 }
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
-}
-
-java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-}
-
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName}"}
+	from(project.file("LICENSE")) {
+		rename { "${it}_${archives_name}" }
 	}
 }
 
-publishMods {
-	file = remapJar.archiveFile
-	additionalFiles.from(remapSourcesJar.archiveFile)
-	changelog = file("latest-changelog.md").text
-	type = STABLE
-	modLoaders.add("fabric")
-
-	curseforge {
-		projectId = "1166675"
-		projectSlug = "qualia-carpet-addition"
-		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-		requires("fabric-api")
-		requires("carpet")
-		minecraftVersions.add("1.21")
-		minecraftVersions.add("1.21.1")
-		displayName = rootProject.version
-	}
-	modrinth {
-		projectId = "JyI4tI00"
-		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-		requires("fabric-api")
-		requires("carpet")
-		minecraftVersions.add("1.21")
-		minecraftVersions.add("1.21.1")
-		displayName = rootProject.version
-	}
-	github {
-		repository = "QiuShui1012/Qualia-Carpet-Addition"
-		accessToken = providers.environmentVariable("GITHUB_TOKEN")
-		commitish = "fabric/1.21-1.21.1"
-		displayName = project.version
-		tagName = project.version
-	}
+lombok {
+	version = "1.18.34"
 }

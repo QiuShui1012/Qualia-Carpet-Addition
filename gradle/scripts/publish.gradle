@@ -1,0 +1,32 @@
+publishMods {
+    file = jar.archiveFile
+    additionalFiles.from(tasks.sourcesJar.archiveFile)
+    changelog = file("latest-changelog.md").text
+    type = STABLE
+    modLoaders.add("neoforge")
+
+    curseforge {
+        projectId = "1166675"
+        projectSlug = "qualia-carpet-addition"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        requires("rolling-gate")
+        minecraftVersions.add("1.21")
+        minecraftVersions.add("1.21.1")
+        displayName = rootProject.version
+    }
+    modrinth {
+        projectId = "JyI4tI00"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        requires("rolling-gate")
+        minecraftVersions.add("1.21")
+        minecraftVersions.add("1.21.1")
+        displayName = rootProject.version
+    }
+    github {
+        repository = "QiuShui1012/Qualia-Carpet-Addition"
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = "neo-rg/1.21-1.21.1"
+        displayName = project.version
+        tagName = project.version
+    }
+}

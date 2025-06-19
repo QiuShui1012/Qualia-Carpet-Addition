@@ -1,10 +1,9 @@
 package zh.qiushui.mod.qca.api.task;
 
 import lombok.Getter;
-import zh.qiushui.mod.qca.QcaExtension;
-import zh.qiushui.mod.qca.QcaSettings;
+import zh.qiushui.mod.qca.Qca;
+import zh.qiushui.mod.qca.QcaServerRules;
 
-@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class Task implements Runnable {
     @Getter
     private final String info;
@@ -18,8 +17,8 @@ public class Task implements Runnable {
     @Override
     public void run() {
         this.task.run();
-        if (QcaSettings.qcaDebugLog && this.getInfo() != null) {
-            QcaExtension.LOGGER.debug("Task {} successfully run.", this.getInfo());
+        if (QcaServerRules.qcaDebugLog && this.getInfo() != null) {
+            Qca.LOGGER.debug("Task {} successfully run.", this.getInfo());
         }
     }
 }

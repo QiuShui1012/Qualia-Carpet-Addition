@@ -1,22 +1,22 @@
 package zh.qiushui.mod.qca.mixin.rule.beaconIncreaseInteractionRange;
 
 import com.google.common.collect.Sets;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BeaconBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import zh.qiushui.mod.qca.QcaExtension;
-import zh.qiushui.mod.qca.QcaSettings;
+import zh.qiushui.mod.qca.Qca;
+import zh.qiushui.mod.qca.QcaServerRules;
 import zh.qiushui.mod.qca.rule.util.EntityUtil;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.BeaconUtil;
 import zh.qiushui.mod.qca.rule.util.beaconIncreaseInteractionRange.IncreaseInteractionRange;
@@ -27,7 +27,7 @@ import java.util.Set;
 @Mixin(BeaconBlockEntity.class)
 public abstract class MixinBeaconBlockEntity extends BlockEntity implements IncreaseInteractionRange {
     @Unique
-    private final Set<PlayerEntity> increasedPlayers = Sets.newConcurrentHashSet();
+    private final Set<Player> qca$increasedPlayers = Sets.newConcurrentHashSet();
 
     public MixinBeaconBlockEntity(
         BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState
@@ -36,15 +36,15 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
     }
 
     @Override
-    public Set<PlayerEntity> qca$getIncreasedPlayers() {
-        return this.increasedPlayers;
+    public Set<Player> qca$getIncreasedPlayers() {
+        return this.qca$increasedPlayers;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerIdentifier(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
         BeaconUtil.TASKS.register(blockPos);
-        if (QcaSettings.qcaDebugLog) {
-            QcaExtension.LOGGER.debug("Tried to register an identifier to the beacon task manager.");
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug("Tried to register an identifier to the beacon task manager.");
         }
     }
 
@@ -52,54 +52,54 @@ public abstract class MixinBeaconBlockEntity extends BlockEntity implements Incr
         method = "tick",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/block/entity/BeaconBlockEntity;"
-                     + "applyPlayerEffects(Lnet/minecraft/world/World;"
-                     + "Lnet/minecraft/util/math/BlockPos;"
-                     + "ILnet/minecraft/registry/entry/RegistryEntry;"
-                     + "Lnet/minecraft/registry/entry/RegistryEntry;)V"
+            target = "Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;"
+                     + "applyEffects(Lnet/minecraft/world/level/Level;"
+                     + "Lnet/minecraft/core/BlockPos;"
+                     + "ILnet/minecraft/core/Holder;"
+                     + "Lnet/minecraft/core/Holder;)V"
     ))
     private static void qca$increasePlayersInteractionRange(
-        World world, BlockPos pos, BlockState state, BeaconBlockEntity beacon, CallbackInfo ci
+        Level level, BlockPos pos, BlockState state, BeaconBlockEntity beacon, CallbackInfo ci
     ) {
-        if (QcaSettings.beaconIncreaseIsEnabled()) {
-            qca$increasePlayersInteractionRange(world, pos, beacon);
+        if (QcaServerRules.beaconIncreaseIsEnabled()) {
+            qca$increasePlayersInteractionRange(level, pos, beacon);
         }
     }
 
-    @Inject(method = "markRemoved", at = @At("TAIL"))
+    @Inject(method = "setRemoved", at = @At("TAIL"))
     private void qca$removeModifiersOfPlayers(CallbackInfo ci) {
-        for (PlayerEntity player : this.qca$getIncreasedPlayers()) {
-            BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.pos, player);
+        for (Player player : this.qca$getIncreasedPlayers()) {
+            BeaconUtil.removeBeaconIncreaseModifiersForPlayer(this.getBlockPos(), player);
         }
-        BeaconUtil.TASKS.remove(this.pos);
-        if (QcaSettings.qcaDebugLog) {
-            QcaExtension.LOGGER.debug("Tried to remove this identifier from the beacon task manager.");
+        BeaconUtil.TASKS.remove(this.getBlockPos());
+        if (QcaServerRules.qcaDebugLog) {
+            Qca.LOGGER.debug("Tried to remove this identifier from the beacon task manager.");
         }
     }
 
     @Unique
-    private static void qca$increasePlayersInteractionRange(World world, BlockPos pos, BeaconBlockEntity beacon) {
-        if (!world.isClient) {
-            int level = ((BeaconBlockEntityAccessor) beacon).qca$getLevel();
-            double rangeWidth = level * 10 + 10;
-            Box range = new Box(pos).expand(rangeWidth).stretch(0, world.getHeight(), 0);
+    private static void qca$increasePlayersInteractionRange(Level level, BlockPos pos, BeaconBlockEntity beacon) {
+        if (!level.isClientSide) {
+            int levels = ((BeaconBlockEntityAccessor) beacon).qca$getLevel();
+            double rangeWidth = levels * 10 + 10;
+            AABB range = new AABB(pos).inflate(rangeWidth).expandTowards(0, level.getHeight(), 0);
 
-            List<PlayerEntity> inRangePlayers = EntityUtil.getEntities(world, range, EntityType.PLAYER);
+            List<Player> inRangePlayers = EntityUtil.getEntities(level, range, EntityType.PLAYER);
 
-            for (PlayerEntity player : beacon.qca$getIncreasedPlayers()) {
-                BeaconUtil.removeBeaconIncreaseModifiersForPlayer(beacon.getPos(), player);
+            for (Player player : ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers()) {
+                BeaconUtil.removeBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player);
             }
-            if (QcaSettings.qcaDebugLog) {
-                QcaExtension.LOGGER.debug("(Tick) Tried to remove the modifier from the increased players.");
+            if (QcaServerRules.qcaDebugLog) {
+                Qca.LOGGER.debug("(Tick) Tried to remove the modifier from the increased players.");
             }
 
-            for (PlayerEntity player : inRangePlayers) {
-                BeaconUtil.addBeaconIncreaseModifiersForPlayer(beacon.getPos(), player, level);
+            for (Player player : inRangePlayers) {
+                BeaconUtil.addBeaconIncreaseModifiersForPlayer(beacon.getBlockPos(), player, levels);
 
-                beacon.qca$getIncreasedPlayers().add(player);
+                ((IncreaseInteractionRange) beacon).qca$getIncreasedPlayers().add(player);
             }
-            if (QcaSettings.qcaDebugLog) {
-                QcaExtension.LOGGER.debug("(Tick) Tried to add the modifier to the players in range.");
+            if (QcaServerRules.qcaDebugLog) {
+                Qca.LOGGER.debug("(Tick) Tried to add the modifier to the players in range.");
             }
         }
     }

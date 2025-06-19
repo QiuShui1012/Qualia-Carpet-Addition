@@ -1,32 +1,41 @@
 package zh.qiushui.mod.qca.mixin.rule.boneMealDoubleSmallFlowers;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.PlantBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import zh.qiushui.mod.qca.QcaSettings;
-import zh.qiushui.mod.qca.rule.util.boneMealDoubleSmallFlowers.DoubleWithFertilization;
+import zh.qiushui.mod.qca.QcaServerRules;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 @Mixin(FlowerBlock.class)
-public abstract class MixinFlowerBlock extends PlantBlock implements DoubleWithFertilization {
-    protected MixinFlowerBlock(Settings settings) {
-        super(settings);
+public abstract class MixinFlowerBlock extends BushBlock implements BonemealableBlock {
+    protected MixinFlowerBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return QcaSettings.boneMealDoubleSmallFlowers;
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+        return QcaServerRules.boneMealDoubleSmallFlowers;
     }
 
     @Override
-    public void qca$doubled(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        if (QcaSettings.boneMealDoubleSmallFlowers) {
-            dropStack(world, pos, new ItemStack(this));
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    @Override
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+        if (QcaServerRules.boneMealDoubleSmallFlowers) {
+            popResource(level, pos, new ItemStack(this));
         }
     }
 }

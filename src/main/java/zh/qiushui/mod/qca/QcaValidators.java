@@ -1,64 +1,64 @@
 package zh.qiushui.mod.qca;
 
-import carpet.api.settings.CarpetRule;
-import carpet.api.settings.Validator;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.server.command.ServerCommandSource;
-import org.jetbrains.annotations.Nullable;
+import dev.anvilcraft.rg.api.RGValidator;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
+@ParametersAreNonnullByDefault
 public class QcaValidators {
-    public static class PlantTransform extends Validator<String> {
+    public static class PlantTransform implements RGValidator<String> {
         private static final Set<String> OPTIONS = Set.of("enable", "grasses", "dripleaf", "flowers", "disable");
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
+        public boolean validate(String newValue, @NotNull String userInput) {
             String[] options = newValue.trim().split(",");
-            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
+            return OPTIONS.containsAll(Arrays.stream(options).toList());
         }
 
         @Override
-        public String description() {
+        public String reason() {
             return "Can be limited to different plant types only, enable/disable for all types/no types, or some of types.";
         }
     }
 
-    public static class TooExpensiveLevel extends Validator<Integer> {
+    public static class TooExpensiveLevel extends RGValidator.IntegerValidator {
         @Override
-        public Integer validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<Integer> carpetRule, Integer newValue, String userInput
-        ) {
-            return newValue < -1 ? 39 : newValue;
+        public Map.@NotNull Entry<Integer, Integer> getRange() {
+            return Map.entry(-1, Integer.MAX_VALUE);
         }
 
         @Override
-        public String description() {
+        public Map.Entry<Boolean, Boolean> containsRange() {
+            return Map.entry(true, false);
+        }
+
+        @Override
+        public String reason() {
             return "This value represents the maximum repair cost level at which an item is considered too expensive to repair in an anvil. Must be -1 or larger";
         }
     }
 
-    public static class LimitationSources extends Validator<String> {
+    public static class LimitationSources implements RGValidator<String> {
         private static final Set<String> OPTIONS = Set.of("disabled", "itemFrame", "customName");
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
+        public boolean validate(String newValue, @NotNull String userInput) {
             String[] options = newValue.trim().split(",");
-            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
+            return OPTIONS.containsAll(Arrays.stream(options).toList());
         }
 
         @Override
-        public String description() {
+        public String reason() {
             return "Can be limited to limitation sources only. disabled for disable limitation.";
         }
     }
 
-    public static class BeaconIncreaseInteractionRangeMode extends Validator<String> {
+    public static class BeaconIncreaseInteractionRangeMode extends RGValidator.StringInSetValidator {
         private static final Set<String> MODES = ImmutableSet.of(
             "add", "multiplyBase", "multiplyTotal",
             "addWithoutLevel", "multiplyBaseWithoutLevel", "multiplyTotalWithoutLevel",
@@ -66,29 +66,24 @@ public class QcaValidators {
         );
 
         @Override
-        public String validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<String> carpetRule, String newValue, String userInput
-        ) {
-            return !MODES.contains(newValue) ? null : newValue;
+        public Set<String> getSet() {
+            return MODES;
         }
 
         @Override
-        public String description() {
+        public String reason() {
             return "This value controls the mode of how to increase the value.\n\"addition\", \"multiplyBase\" and \"multiplyTotal\" are their literal meanings. \"WithoutLevel\" means it will ignore the beacon's level on calculate.";
         }
     }
 
-    public static class BeaconIncreaseInteractionRangeValue extends Validator<Double> {
+    public static class BeaconIncreaseInteractionRangeValue implements RGValidator<Double> {
         @Override
-        public Double validate(
-            @Nullable ServerCommandSource serverCommandSource, CarpetRule<Double> carpetRule,
-            Double newValue, String userInput
-        ) {
-            return (QcaSettings.beaconIncreaseIsEnabled() && newValue < 0) ? 0 : newValue;
+        public boolean validate(Double newValue, String userInput) {
+            return QcaServerRules.beaconIncreaseIsEnabled() && newValue > 0;
         }
 
         @Override
-        public String description() {
+        public String reason() {
             return "This value represents the addend or multiplier will be used in calculate increase value. Rule beaconIncreaseInteractionRange must be enabled. Value must be positive.";
         }
     }

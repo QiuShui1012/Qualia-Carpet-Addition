@@ -1,7 +1,7 @@
 package zh.qiushui.mod.qca.mixin.rule.easyHopperLimitation;
 
-import net.minecraft.block.entity.HopperBlockEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
