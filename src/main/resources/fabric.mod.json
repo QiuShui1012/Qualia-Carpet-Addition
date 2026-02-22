@@ -1,17 +1,23 @@
 {
 	"schemaVersion": 1,
-	"id": "qca",
-	"version": "${version}",
-	"name": "Qualia Carpet Addition",
-	"description": "An addition for carpet.",
+	"id": "${mod_id}",
+	"name": "${mod_name}",
+	"version": "${mod_version}",
+	"description": "${mod_description}",
 	"authors": [
-		"QiuShui1012"
+		{
+			"name": "QiuShui1012",
+			"contact": {
+				"homepage": "https://github.com/QiuShui1012/"
+			}
+		}
 	],
+	"license": "${mod_license}",
 	"contact": {
-		"homepage": "https://qiushui1012.github.io/",
-		"sources": "https://github.com/QiuShui1012/Qualia-Carpet-Addition/"
+		"homepage": "${mod_homepage}",
+		"issues": "${mod_sources}/issues",
+		"sources": "${mod_sources}"
 	},
-	"license": "Apache License 2.0",
 	"icon": "assets/qca/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -19,21 +25,14 @@
 			"zh.qiushui.mod.qca.QcaExtension"
 		]
 	},
-	"custom": {
-		"loom:injected_interfaces": {
-			"net/minecraft/class_2580": ["zh/qiushui/mod/qca/rule/util/beaconIncreaseInteractionRange/IncreaseInteractionRange"],
-			"net/minecraft/class_2614": ["zh/qiushui/mod/qca/rule/util/easyHopperLimitation/HopperCache"]
-		}
-	},
-	"accessWidener": "qca.accessWidener",
+	"accessWidener": "qca.classTweaker",
 	"mixins": [
 		"qca.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.9",
-		"minecraft": ">=1.21 <1.21.2",
-		"java": ">=21",
+		"fabricloader": "*",
+		"minecraft": "${minecraft_dependency}",
 		"fabric-api": "*",
-		"carpet": ">=1.4.147"
+		"carpet": "*"
 	}
 }

@@ -1,0 +1,258 @@
+plugins {
+    id 'maven-publish'
+    alias libs.plugins.replacetoken
+}
+
+final int mcVersion = project.mcVersion
+final boolean unobfuscated = mcVersion >= 26_00_00
+
+apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-loom-remap'
+apply plugin: 'com.replaymod.preprocess'
+apply plugin: "io.freefair.lombok"
+
+preprocess {
+    vars.put("MC", mcVersion)
+}
+
+repositories {
+    mavenLocal()
+
+    maven {
+        name = "Masa Maven"
+        url = "https://masa.dy.fi/maven/"
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+    def processDependency = { dep ->
+        // https://github.com/FabricMC/fabric-loader/issues/783
+        if (dep instanceof ModuleDependency) {
+            if (!(dep.group == 'net.fabricmc' && dep.name == 'fabric-loader')) {
+                dep.exclude group: 'net.fabricmc', module: 'fabric-loader'
+            }
+            dep.exclude group: 'com.github.astei', module: 'lazydfu'
+            dep.exclude group: 'com.github.2No2Name', module: 'McTester'
+        }
+        return dep
+    }
+    def autoImplementation = { Object... args -> processDependency(unobfuscated ? implementation(*args) : modImplementation(*args)) }
+
+    minecraft "com.mojang:minecraft:${project.property("dependencies.minecraft_version")}"
+    if (!unobfuscated) mappings loom.officialMojangMappings()
+
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
+    autoImplementation libs.fabric.loader
+    autoImplementation "net.fabricmc.fabric-api:fabric-api:${project.property("dependencies.fabric_api_version")}"
+    autoImplementation "carpet:fabric-carpet:${project.property("dependencies.carpet_version")}"
+}
+
+loom {
+    enableTransitiveAccessWideners.set(false)
+
+    interfaceInjection {
+        enableDependencyInterfaceInjection.set(false)
+        isEnabled.set(false)
+    }
+
+    def path = "src/main/resources/${project.parent.property("mod.id")}.classTweaker"
+
+    def accessWidenerFile = file(path)
+    if (!accessWidenerFile.exists()) {
+        accessWidenerFile = rootProject.file(path)
+    }
+
+    accessWidenerPath = accessWidenerFile
+
+    var isJbr = System.getProperty('java.vm.vendor').contains('JetBrains')
+    runConfigs.configureEach {
+        // Dump modified classes automatically.
+        property("mixin.debug.export", "true")
+        if (isJbr) vmArgs("-XX:+AllowEnhancedClassRedefinition")
+    }
+
+    runConfigs.named("client") {
+        programArgs([
+                "--username",
+                project.getOrDefault("ow.game.window.username", "dev")
+        ])
+        runDir("run/client")
+    }
+
+    runConfigs.named("server") {
+        runDir("run/server")
+    }
+}
+
+base {
+    setArchivesName("${project.parent.property("mod.archives_base_name")}-mc${project.property("dependencies.minecraft_version")}-fabric")
+    setGroup("${project.property("mod.maven_group")}")
+    setVersion(project.getModVersion(project.parent))
+}
+
+java {
+    if (mcVersion > 26_00_00) {
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
+    } else if (mcVersion > 1_20_05) {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    } else if (mcVersion > 1_17_01) {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    } else if (mcVersion > 1_16_05) {
+        sourceCompatibility = JavaVersion.VERSION_16
+        targetCompatibility = JavaVersion.VERSION_16
+    } else {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    withSourcesJar()
+}
+
+processResources {
+    inputs.property("minecraft_dependency", project.property("dependencies.minecraft_dependency"))
+    inputs.property("mod_alias", project.parent.property("mod.id"))
+    inputs.property("mod_description", project.parent.property("mod.description"))
+    inputs.property("mod_homepage", project.parent.property("mod.homepage"))
+    inputs.property("mod_id", project.parent.property("mod.id").toString().replace("-", "_"))
+    inputs.property("mod_license", project.parent.property("mod.license"))
+    inputs.property("mod_name", project.parent.property("mod.name"))
+    inputs.property("mod_sources", project.parent.property("mod.sources"))
+    inputs.property("mod_version", project.getVersionWithCommitHash(this.project.parent))
+
+    filesMatching("fabric.mod.json") {
+        expand([
+                "minecraft_dependency": inputs.properties.get("minecraft_dependency"),
+                "mod_alias"           : inputs.properties.get("mod_alias"),
+                "mod_description"     : inputs.properties.get("mod_description"),
+                "mod_homepage"        : inputs.properties.get("mod_homepage"),
+                "mod_id"              : inputs.properties.get("mod_id"),
+                "mod_license"         : inputs.properties.get("mod_license"),
+                "mod_name"            : inputs.properties.get("mod_name"),
+                "mod_sources"         : inputs.properties.get("mod_sources"),
+                "mod_version"         : inputs.properties.get("mod_version")
+        ])
+    }
+
+    from("${rootDir}/LICENSE")
+    from("${rootDir}/icon.png") {
+        into("assets/${project.parent.property("mod.id")}")
+    }
+}
+
+tasks.named('sourcesJar').configure {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from delombok.outputs.files
+    dependsOn delombok
+}
+
+tasks.named("runClient").configure {
+    dependsOn tasks.named("build")
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(rootProject.file("LICENSE"))
+}
+
+tasks.named("assemble").configure {
+    dependsOn tasks.jar
+    dependsOn tasks.sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = "${this.project.parent.property("mod.artifact_name")}-${project.name}"
+            version = "${this.project.getMavenArtifactVersion(this.project.parent)}"
+
+            from(this.project.components.java)
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        def MAVEN_URL = System.getenv("MAVEN_URL")
+        if (MAVEN_URL != null) {
+            maven {
+                url MAVEN_URL
+                credentials {
+                    username System.getenv("MAVEN_USERNAME")
+                    password System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        } else {
+            mavenLocal()
+        }
+    }
+}
+
+tasks.withType(Javadoc).configureEach { Javadoc task ->
+    include("**/api/**")
+    task.options.encoding("UTF-8")
+    (task.options as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
+}
+
+tasks.withType(JavaCompile).configureEach { JavaCompile task ->
+    task.options.encoding = "UTF-8"
+    task.options.release.set(Integer.parseInt(java.targetCompatibility.getMajorVersion()))
+}
+
+// Setup server default settings.
+tasks.named("runServer") {
+    defaultCharacterEncoding = "UTF-8"
+
+    doFirst {
+        // Agree eula before server init.
+        file("${project.projectDir}/run/server/eula.txt").with { File f ->
+            {
+                if (!f.exists()) {
+                    f.parentFile.mkdirs()
+                    f.withWriter { BufferedWriter writer ->
+                        writer.writeLine("#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).")
+                        writer.writeLine("#${new Date()}")
+                        writer.writeLine("eula=true")
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.register("cleanRuns", DefaultTask.class) {
+    doLast {
+        file(loom.runConfigs.client.runDir).parentFile.deleteDir()
+    }
+}
+
+tasks.register("cleanRunClient", DefaultTask.class) {
+    doLast {
+        file(loom.runConfigs.client.runDir).deleteDir()
+    }
+}
+
+tasks.register("cleanRunServer", DefaultTask.class) {
+    doLast {
+        file(loom.runConfigs.server.runDir).deleteDir()
+    }
+}
+
+[
+        "cleanRuns", "cleanRunClient", "cleanRunServer",
+        "runClient", "runServer",
+        "preprocessCode", "preprocessResources",
+        "preprocessTestCode", "preprocessTestResources"
+].forEach { taskName ->
+    if (tasks.getNames().contains(taskName)) {
+        tasks.named(taskName) {
+            it.setGroup("${project.property("mod.id")}")
+        }
+    }
+}
+
+lombok.version = "1.18.42"

@@ -1,10 +1,67 @@
+import groovy.json.JsonSlurper
+
 pluginManagement {
 	repositories {
+		mavenLocal()
+		mavenCentral()
+
 		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
-		mavenCentral()
+
+		maven {
+			name = "Jitpack"
+			url = "https://jitpack.io"
+		}
+
 		gradlePluginPortal()
 	}
+
+	resolutionStrategy {
+		eachPlugin {
+			switch (requested.id.id) {
+				case "com.replaymod.preprocess": {
+					useModule("com.github.Fallen-Breath:preprocessor:${requested.version}")
+					break
+				}
+			}
+		}
+	}
 }
+
+Map<String, List<String>> settings = file("settings.json").withReader {
+	new JsonSlurper().parse(it) as Map<String, List<String>>
+}
+
+List<String> versions = settings.get("versions") as List<String>
+File mainProjectFile = file("versions/mainProject")
+
+if (!mainProjectFile.exists()) {
+	throw new IllegalArgumentException("Missing mainProject file: ${mainProjectFile.absolutePath}")
+}
+
+String mainProject = new String(mainProjectFile.readBytes()).trim()
+
+if (!versions.contains(mainProject)) {
+	throw new IllegalArgumentException("Invalid main project: ${mainProject}")
+}
+
+for (String version : versions) {
+	include(":$version")
+	ProjectDescriptor proj = project(":$version")
+	proj.setProjectDir(file("versions/$version"))
+	var modPlatform = "none"
+	if (version.endsWith("-fabric")) {
+		modPlatform = "fabric"
+	} else if (version.endsWith("-forge")) {
+		modPlatform = "forge"
+	} else if (version.endsWith("-neoforge")) {
+		modPlatform = "neoforge"
+	} else if (version.endsWith("-quilt")) {
+		modPlatform = "quilt"
+	}
+	proj.setBuildFileName("../../${modPlatform}.gradle")
+}
+
+rootProject.name = "Qualia Carpet Addition"

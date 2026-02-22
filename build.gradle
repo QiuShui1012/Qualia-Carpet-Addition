@@ -1,62 +1,228 @@
 plugins {
-	alias libs.plugins.fabric.loom
+	alias libs.plugins.fabric.loom apply false
+	alias libs.plugins.fabric.loom.remap apply false
+	alias libs.plugins.preprocessor
+	alias libs.plugins.grgit
 	alias libs.plugins.lombok
-	alias libs.plugins.modpublish
 }
 
-group = project.group
-version = project.version + "-fabric+" + libs.versions.minecraft.get()
+preprocess {
+	strictExtraMappings = false
+	
+	var mc12101_fabric = createNode("1.21.1-fabric", 1_21_01, 'mojang')
+	var mc12103_fabric = createNode("1.21.3-fabric", 1_21_03, 'mojang')
+	var mc12104_fabric = createNode("1.21.4-fabric", 1_21_04, 'mojang')
+	var mc12105_fabric = createNode("1.21.5-fabric", 1_21_05, 'mojang')
+	var mc12108_fabric = createNode("1.21.8-fabric", 1_21_08, 'mojang')
+	var mc12110_fabric = createNode("1.21.10-fabric", 1_21_10, 'mojang')
+	var mc12111_fabric = createNode("1.21.11-fabric", 1_21_11, 'mojang')
+	var mc260100_fabric = createNode("26.1-fabric", 26_01_00, 'mojang')
 
-base.archivesName = project.archives_name
+	mc12101_fabric.link(mc12103_fabric, null)
+	mc12103_fabric.link(mc12104_fabric, null)
+	mc12104_fabric.link(mc12105_fabric, null)
+	mc12105_fabric.link(mc12108_fabric, null)
+	mc12108_fabric.link(mc12110_fabric, null)
+	mc12110_fabric.link(mc12111_fabric, file("versions/mappings-1.21.10-to-1.21.11.txt"))
+	mc12111_fabric.link(mc260100_fabric, null)
 
-repositories {
-	mavenCentral()
-	maven {
-		name "Masa Maven"
-		url "https://masa.dy.fi/maven"
+	for (final def node in getNodes()) {
+		findProject(node.project).ext.mcVersion = node.mcVersion
 	}
 }
 
-loom {
-	accessWidenerPath = file("src/main/resources/qca.accessWidener")
-}
+ext {
+	Map env = System.getenv()
+	File localPropsFile = file("${rootDir}/local.properties")
 
-dependencies {
-	minecraft libs.minecraft
-	mappings loom.officialMojangMappings()
+	if (localPropsFile.exists()) {
+		Properties p = new Properties()
+		p.load(new FileInputStream(localPropsFile))
+		p.each { key, value ->
+			ext[key as String] = value
+		}
+	}
 
-	modImplementation libs.bundles.fabric
+	getEnv = {
+		return env
+	}
 
-	modImplementation libs.fabric.carpet
-}
+	getOrDefault = { String key, String defaultValue ->
+		String value
+		(value = project.findProperty(key)) && !value.isEmpty() ? value : defaultValue
+	}
 
-processResources {
-	inputs.property "version", project.version
+	isGithubCI = {
+		return env.get("GITHUB_ACTION") != null
+	}
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+	isJitpack = {
+		return env.get("JITPACK") != null
+	}
+
+	getBuildNumber = {
+		return env.GITHUB_RUN_NUMBER ? env.GITHUB_RUN_NUMBER : 0
+	}
+
+	getVersionGit = { List paths ->
+		if (grgit == null || grgit.head() == null) {
+			return "nogit"
+		}
+
+		List latestCommits = paths.isEmpty() ? grgit.log(maxCommits: 1) : grgit.log(paths: paths, maxCommits: 1)
+		return latestCommits.isEmpty() ? "uncommited" : "${latestCommits.get(0).id.substring(0, 7)}"
+	}
+
+	getVersionType = {
+		String type = getOrDefault("ow.build.environment.buildType", null)
+
+		if (type != null) {
+			return type
+		}
+
+		if (isJitpack()) {
+			return "jitpack"
+		}
+
+		type = env.BUILD_TYPE
+
+		switch (type) {
+			case "RELEASE":
+				return "stable"
+			case "BETA":
+				return "beta"
+			case "PULL_REQUEST":
+				return "pull_request"
+			default:
+				return "dev"
+		}
+	}
+
+	getVersionPatch = { List paths ->
+		if (grgit == null || grgit.head() == null) {
+			return 0
+		}
+
+		List latestCommits = paths.isEmpty() ? grgit.log() : grgit.log(paths: paths)
+		return latestCommits.size()
+	}
+
+	getVersion = { Project proj ->
+		return "${proj.property("mod.version")}.${getVersionPatch(proj == rootProject ? [] : [proj.projectDir.name])}"
+	}
+
+	getVersionWithCommitHash = { Project proj ->
+		return "${getVersion(proj)}+${getVersionGit(proj == rootProject ? [] : [proj.projectDir.name])}-${getVersionType()}"
+	}
+
+	getModVersion = { Project proj ->
+		return "${getVersion(proj)}-${getVersionType()}"
+	}
+
+	getMavenArtifactVersion = { Project proj ->
+		return project.getVersionType() == "stable" ? "${getVersion(proj)}" : "${getModVersion(proj)}"
+	}
+
+	getModPlatform = { Project proj ->
+		return "${proj.name.split("-")[1]}"
+	}
+
+	getModPlatforms = {
+		return [ "forge", "neoforge", "fabric", "quilt" ]
+	}
+
+	isFabricLike = { Project proj ->
+		return getModPlatform(proj) == "fabric" || getModPlatform(proj) == "quilt"
+	}
+
+	isForgeLike = { Project proj ->
+		return getModPlatform(proj) == "forge" || getModPlatform(proj) == "neoforge"
 	}
 }
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
-}
+tasks.register("genLocalProperties") {
+	it.group = "${project.property("mod.id")}"
 
-java {
-	withSourcesJar()
+	doFirst {
+		File localPropsFile = file("${rootDir}/local.properties")
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-}
+		if (localPropsFile.exists()) {
+			throw new IllegalStateException("local.properties file already generated. If you want to regenerate it, please delete it manually first")
+		} else {
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(localPropsFile))
+			bufferedWriter.writeLine("# Secrets")
+			bufferedWriter.writeLine("secrets.gpg.signingKey=")
+			bufferedWriter.writeLine("secrets.gpg.signingPassword=")
+			bufferedWriter.writeLine("secrets.mavenCentral.username=")
+			bufferedWriter.writeLine("secrets.mavenCentral.password=")
+			bufferedWriter.writeLine('')
+			bufferedWriter.writeLine("# Overwritten configurations")
+			bufferedWriter.writeLine("ow.build.environment.local=")
+			bufferedWriter.writeLine("ow.build.environment.buildType=")
+			bufferedWriter.writeLine("ow.game.window.width=")
+			bufferedWriter.writeLine("ow.game.window.height=")
+			bufferedWriter.writeLine("ow.game.window.username=")
+			bufferedWriter.close()
 
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName}"}
+			project.getLogger().info("local.properties generated successfully!")
+		}
 	}
 }
 
-apply from: "$rootDir/gradle/scripts/publish.gradle"
+tasks.register("cleanPreprocessSources") {
+	it.group = "${project.mod_id}"
 
-lombok {
-	version = "1.18.34"
+	doFirst {
+		subprojects {
+			def path = project.projectDir.toPath().resolve("build/preprocessed")
+			path.toFile().deleteDir()
+		}
+	}
+}
+
+tasks.register("copyAllJars", Copy) {
+	var libs = it.rootSpec.addChild()
+	var devlibs = it.rootSpec.addChild()
+	subprojects.forEach { subproject ->
+		libs.from(subproject.layout.buildDirectory.dir("libs")) {
+			include("*.jar")
+		}
+		devlibs.from(subproject.layout.buildDirectory.dir("devlibs")) {
+			include("*.jar")
+		}
+	}
+	doFirst {
+		delete layout.buildDirectory.dir("libs")
+		delete layout.buildDirectory.dir("devlibs")
+	}
+	into(layout.buildDirectory)
+	libs.into("libs")
+	devlibs.into("devlibs")
+	it.with(libs, devlibs)
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+tasks.register("genGithubActionProperties") {
+	it.group = "${project.property("mod.id")}"
+
+	doFirst {
+		subprojects.forEach {
+			File gaPropertiesFile = file("${rootDir}/github_actions.properties")
+
+			if (gaPropertiesFile.exists()) {
+				throw new IllegalStateException("github_actions.properties file already generated.")
+			} else {
+				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(gaPropertiesFile))
+				bufferedWriter.writeLine("{")
+				bufferedWriter.writeLine("  \"mod_name\": \"${it.getModVersion(it.parent)}\",")
+				bufferedWriter.writeLine("  \"mod_version\": \"${it.getModVersion(it.parent)}\",")
+				//bufferedWriter.writeLine("  \"loader_id\": \"${it.java.sourceCompatibility.getMajorVersion()}\",")
+				bufferedWriter.writeLine("  \"java_version\": \"${it.java.sourceCompatibility.getMajorVersion()}\"")
+				bufferedWriter.writeLine("}")
+				bufferedWriter.close()
+
+				project.getLogger().info("github_actions.properties generated successfully!")
+			}
+		}
+	}
 }
