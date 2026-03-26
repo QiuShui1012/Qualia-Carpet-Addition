@@ -1,12 +1,13 @@
 package com.qiushui1012.mod.qca.mixin.rule;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.qiushui1012.mod.qca.util.rule.EntityCollisionContextExtension;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
@@ -17,9 +18,8 @@ public abstract class MixinEntityCollisionContext_itemsCanPassThroughChains impl
     private Optional<Entity> qca$entity = Optional.empty();
 
     @SuppressWarnings("OptionalOfNullableMisuse")
-    @WrapMethod(method = "<init>(Lnet/minecraft/world/entity/Entity;)V")
-    private void storeEntity(Entity entity, Operation<Void> original) {
-        original.call(entity);
+    @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
+    private void storeEntity(Entity entity, CallbackInfo ci) {
         this.qca$entity = Optional.ofNullable(entity);
     }
 
