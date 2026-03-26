@@ -84,18 +84,18 @@ jobs:
           name: "${{ inputs.mod_name }} ${{ steps.version.outputs.version }}"
           path: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
 
-      - name: Setup Java ${{ steps.properties.outputs.action-java_version }} For Game Test
+      - name: Setup Java ${{ steps.properties.outputs.actions-java_version }} For Game Test
         if: ${{ inputs.gametest }}
         uses: actions/setup-java@v5.2.0
         with:
           distribution: zulu
-          java-version: ${{ steps.properties.outputs.action-java_version }}
+          java-version: ${{ steps.properties.outputs.actions-java_version }}
 
       - name: Game Test
         if: ${{ inputs.gametest }}
         uses: Anvil-Dev/dedicated-server-launch-test@universal
         with:
-          minecraft_version: '${{ steps.properties.outputs.action-minecraft_version }}'
+          minecraft_version: '${{ steps.properties.outputs.actions-minecraft_version }}'
           mod_loader: 'fabric'
           loader_version: '0.18.4'
           mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
