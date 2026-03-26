@@ -71,7 +71,7 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: versions/${{ inputs.version }}/gradle.properties
-          properties: 'dependencies.minecraft_dependency dependencies.carpet_version dependencies.fabric_api_version actions.minecraft_version actions.java_version'
+          properties: 'dependencies.minecraft_dependency dependencies.carpet_version actions.minecraft_version actions.java_version'
 
       - name: Get Version
         id: version
@@ -100,10 +100,8 @@ jobs:
           loader_version: '0.18.4'
           mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
           maven-repos: |
-            https://maven.fabricmc.net/
             https://masa.dy.fi/maven/
           maven-mods: |
-            net.fabricmc.fabric-api:fabric-api:${{ steps.properties.outputs.dependencies-fabric_api_version }}
             carpet:fabric-carpet:${{ steps.properties.outputs.dependencies-carpet_version }}
           quiet-setup: True
 

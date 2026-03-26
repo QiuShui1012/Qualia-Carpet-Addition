@@ -21,25 +21,13 @@ repositories {
 }
 
 dependencies {
-    def processDependency = { dep ->
-        // https://github.com/FabricMC/fabric-loader/issues/783
-        if (dep instanceof ModuleDependency) {
-            if (!(dep.group == 'net.fabricmc' && dep.name == 'fabric-loader')) {
-                dep.exclude group: 'net.fabricmc', module: 'fabric-loader'
-            }
-            dep.exclude group: 'com.github.astei', module: 'lazydfu'
-            dep.exclude group: 'com.github.2No2Name', module: 'McTester'
-        }
-        return dep
-    }
-    def autoImplementation = { Object... args -> processDependency(unobfuscated ? implementation(*args) : modImplementation(*args)) }
+    def autoImplementation = { Object... args -> unobfuscated ? implementation(*args) : modImplementation(*args) }
 
     minecraft "com.mojang:minecraft:${project.property("dependencies.minecraft_version")}"
     if (!unobfuscated) mappings loom.officialMojangMappings()
 
     implementation libs.javax
     autoImplementation libs.fabric.loader
-    autoImplementation "net.fabricmc.fabric-api:fabric-api:${project.property("dependencies.fabric_api_version")}"
     autoImplementation "carpet:fabric-carpet:${project.property("dependencies.carpet_version")}"
 }
 
