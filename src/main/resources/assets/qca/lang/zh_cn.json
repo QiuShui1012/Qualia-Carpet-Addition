@@ -16,6 +16,6 @@
   "carpet.rule.pvpDoNotDamageEquipment.desc": "使盔甲在PVP时不会受伤害。",
   "carpet.rule.pvpDoNotDamageWeapon.name": "PVP时不会损伤武器",
   "carpet.rule.pvpDoNotDamageWeapon.desc": "使武器在PVP时不会受伤害。",
-  "carpet.rule.boneMealDoubleSmallFlowers.name": "骨粉可复制小型花",
-  "carpet.rule.boneMealDoubleSmallFlowers.desc": "允许玩家使用骨粉复制小型花。"
+  "carpet.rule.fertilizableSmallFlowers.name": "小型花施肥",
+  "carpet.rule.fertilizableSmallFlowers.desc": "允许玩家使用骨粉对小型花施肥。"
 }

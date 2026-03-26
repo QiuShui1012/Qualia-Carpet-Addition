@@ -22,7 +22,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"zh.qiushui.mod.qca.QcaExtension"
+			"com.qiushui1012.mod.qca.QcaExtension"
 		]
 	},
 	"accessWidener": "qca.classTweaker",

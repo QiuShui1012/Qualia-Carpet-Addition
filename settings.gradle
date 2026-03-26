@@ -51,17 +51,7 @@ for (String version : versions) {
 	include(":$version")
 	ProjectDescriptor proj = project(":$version")
 	proj.setProjectDir(file("versions/$version"))
-	var modPlatform = "none"
-	if (version.endsWith("-fabric")) {
-		modPlatform = "fabric"
-	} else if (version.endsWith("-forge")) {
-		modPlatform = "forge"
-	} else if (version.endsWith("-neoforge")) {
-		modPlatform = "neoforge"
-	} else if (version.endsWith("-quilt")) {
-		modPlatform = "quilt"
-	}
-	proj.setBuildFileName("../../${modPlatform}.gradle")
+	proj.setBuildFileName("../build.gradle")
 }
 
-rootProject.name = "Qualia Carpet Addition"
+rootProject.name = "QualiaCarpetAddition"

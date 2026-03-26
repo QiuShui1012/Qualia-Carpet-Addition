@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.qiushui1012.mod.qca.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "rule.MixinAnvilMenu_tooExpensive",
+    "rule.MixinFlowerBlock_boneMealDoubleSmallFlowers",
+    "rule.MixinItemStack_pvpDoNotDamageWeapon",
+    "rule.MixinLivingEntity_pvpDoNotDamageEquipment",
+    "rule.MixinShearsItem_tallPlantShearToSmall"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "rule.MixinAnvilScreen_tooExpensive"
+  ]
+}

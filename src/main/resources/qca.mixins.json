@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "zh.qiushui.mod.qca.mixin",
+  "package": "com.qiushui1012.mod.qca.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "rule.MixinFlowerBlock_boneMealDoubleSmallFlowers",
@@ -13,6 +13,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
+  },
+  "mixinextras": {
+    "minVersion": "0.5.0"
   },
   "client": [
     "rule.MixinAnvilScreen_tooExpensive"

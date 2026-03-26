@@ -9,5 +9,5 @@
   "carpet.rule.itemsCanPassThroughChains.desc": "Allow item entities pass through chains.\nFor other entities, there is no difference between the collision box and when the rule is closed.",
   "carpet.rule.pvpDoNotDamageEquipment.desc": "Make equipments not damage during PVP.",
   "carpet.rule.pvpDoNotDamageWeapon.desc": "Make weapon not damage during PVP.",
-  "carpet.rule.boneMealDoubleSmallFlowers.desc": "Allow players to use bone meal to double the small flowers."
+  "carpet.rule.fertilizableSmallFlowers.desc": "Allow players to fertilize small flowers."
 }
