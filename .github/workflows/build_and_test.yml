@@ -76,14 +76,14 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          MESSAGE=$(ls ./versions/${{ inputs.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-neoforge-|.jar' '{print $2}')
+          MESSAGE=$(ls ./versions/${{ inputs.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-neo-rg-|.jar' '{print $2}')
           echo "version=$MESSAGE" >> $GITHUB_OUTPUT
 
       - name: Capture Build Artifacts
         uses: actions/upload-artifact@v7
         with:
           name: "${{ inputs.mod_name }} ${{ steps.version.outputs.version }}"
-          path: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
+          path: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ steps.version.outputs.version }}.jar
 
       - name: Setup Java ${{ steps.properties.outputs.actions-java_version }} For Game Test
         if: ${{ inputs.gametest }}
@@ -99,7 +99,7 @@ jobs:
           minecraft_version: '${{ steps.properties.outputs.actions-minecraft_version }}'
           mod_loader: 'neoforge'
           loader_version: '${{ steps.properties.outputs.actions-neoforge_version }}'
-          mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
+          mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ steps.version.outputs.version }}.jar
           maven-repos: |
             https://server.cjsah.net:1002/maven/
           maven-mods: |
@@ -111,7 +111,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ steps.version.outputs.version }}.jar
 
       - name: Publish Mod
         if: ${{ inputs.publish }}
@@ -136,5 +136,5 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           files: |
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}-sources.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ steps.version.outputs.version }}.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ steps.version.outputs.version }}-sources.jar

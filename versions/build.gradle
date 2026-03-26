@@ -56,7 +56,7 @@ loom {
 }
 
 base {
-    setArchivesName("${project.parent.property("mod.archives_base_name")}-fabric-${project.property("dependencies.minecraft_version")}")
+    setArchivesName("${project.parent.property("mod.archives_base_name")}-neo-rg-${project.property("dependencies.minecraft_version")}")
     setGroup("${project.property("mod.maven_group")}")
     setVersion(project.getModVersion(project.parent))
 }
