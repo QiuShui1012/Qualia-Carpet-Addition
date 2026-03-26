@@ -11,6 +11,16 @@ pluginManagement {
 		}
 
 		maven {
+			name = 'Architectury'
+			url = 'https://maven.architectury.dev/'
+		}
+
+		maven {
+			name = 'Forge'
+			url = 'https://files.minecraftforge.net/maven/'
+		}
+
+		maven {
 			name = "Jitpack"
 			url = "https://jitpack.io"
 		}
@@ -28,6 +38,10 @@ pluginManagement {
 			}
 		}
 	}
+}
+
+plugins {
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
 Map<String, List<String>> settings = file("settings.json").withReader {

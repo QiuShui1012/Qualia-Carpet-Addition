@@ -9,8 +9,7 @@
     "rule.MixinAnvilMenu_tooExpensive",
     "rule.MixinBoneMealItem_fertilizableSmallFlowers",
     "rule.MixinChainBlock_itemsCanPassThroughChains",
-    "rule.MixinItemStack_pvpDoNotDamageWeapon",
-    "rule.MixinLivingEntity_pvpDoNotDamageEquipment"
+    "rule.MixinItemStack_pvpDoNotDamageWeapon"
   ],
   "injectors": {
     "defaultRequire": 1

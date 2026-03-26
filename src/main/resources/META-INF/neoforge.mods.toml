@@ -1,0 +1,56 @@
+# This is an example neoforge.mods.toml file. It contains the data relating to the loading mods.
+# There are several mandatory fields (#mandatory), and many more that are optional (#optional).
+# The overall format is standard TOML format, v0.5.0.
+# Note that there are a couple of TOML lists in this file.
+# Find more information on toml format here:  https://github.com/toml-lang/toml
+# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+modLoader="javafml" #mandatory
+
+# A version range to match for said mod loader - for regular FML @Mod it will be the FML version. This is currently 2.
+loaderVersion="[1,)" #mandatory
+
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+license="Apache License 2.0"
+
+# A list of mods - how many allowed here is determined by the individual mod loader
+[[mods]] #mandatory
+modId="${mod_id}" #mandatory
+version="${mod_version}"
+displayName="${mod_name}"
+issueTrackerURL = "${mod_sources}/issues"
+logoFile = "icon.png"
+authors = "QiuShui1012"
+
+# The description text for the mod (multi line!) (#mandatory)
+description = '''
+${mod_description}
+'''
+
+# The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+[[mixins]]
+config="${mod_id}.mixins.json"
+
+# The [[accessTransformers]] block allows you to declare where your AT file is.
+# If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
+# Here's another dependency
+[[dependencies."${mod_id}"]]
+modId="minecraft"
+type="required"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+versionRange="${minecraft_dependency}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies."${mod_id}"]]
+modId="rolling_gate"
+type="required"
+versionRange="[1.1.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[mc-publish]
+loaders = ["neoforge"]

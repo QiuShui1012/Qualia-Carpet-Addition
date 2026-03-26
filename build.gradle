@@ -1,6 +1,5 @@
 plugins {
-	alias libs.plugins.fabric.loom apply false
-	alias libs.plugins.fabric.loom.remap apply false
+	alias libs.plugins.architectury.loom apply false
 	alias libs.plugins.preprocessor
 	alias libs.plugins.lombok
 }
@@ -8,62 +7,10 @@ plugins {
 preprocess {
 	strictExtraMappings = false
 
-	var mc260100 = createNode("26.1", 26_01_00, 'mojang')
-	var mc12111 = createNode("1.21.11", 1_21_11, 'mojang')
-	var mc12110 = createNode("1.21.10", 1_21_10, 'mojang')
 	var mc12108 = createNode("1.21.8", 1_21_08, 'mojang')
-	var mc12106 = createNode("1.21.6", 1_21_06, 'mojang')
-	var mc12105 = createNode("1.21.5", 1_21_05, 'mojang')
-	var mc12104 = createNode("1.21.4", 1_21_04, 'mojang')
-	var mc12103 = createNode("1.21.3", 1_21_03, 'mojang')
 	var mc12101 = createNode("1.21.1", 1_21_01, 'mojang')
-	var mc12006 = createNode("1.20.6", 1_20_06, 'mojang')
-	var mc12004 = createNode("1.20.4", 1_20_04, 'mojang')
-	var mc12002 = createNode("1.20.2", 1_20_02, 'mojang')
-	var mc12001 = createNode("1.20.1", 1_20_01, 'mojang')
-	var mc11904 = createNode("1.19.4", 1_19_04, 'mojang')
-	var mc11903 = createNode("1.19.3", 1_19_03, 'mojang')
-	var mc11902 = createNode("1.19.2", 1_19_02, 'mojang')
-	var mc11900 = createNode("1.19", 1_19_00, 'mojang')
-	var mc11802 = createNode("1.18.2", 1_18_02, 'mojang')
-	var mc11801 = createNode("1.18.1", 1_18_01, 'mojang')
-	var mc11701 = createNode("1.17.1", 1_17_01, 'mojang')
-	var mc11700 = createNode("1.17", 1_17_00, 'mojang')
-	var mc11605 = createNode("1.16.5", 1_16_05, 'mojang')
-	var mc11603 = createNode("1.16.3", 1_16_03, 'mojang')
-	var mc11602 = createNode("1.16.2", 1_16_02, 'mojang')
-	var mc11502 = createNode("1.15.2", 1_15_02, 'mojang')
-	var mc11501 = createNode("1.15.1", 1_15_01, 'mojang')
-	var mc11500 = createNode("1.15", 1_15_00, 'mojang')
-	var mc11404 = createNode("1.14.4", 1_14_04, 'mojang')
 
-	mc260100.link(mc12111, null)
-	mc12111.link(mc12110, file("versions/mappings-1.21.11-to-1.21.10.txt"))
-	mc12110.link(mc12108, null)
-	mc12108.link(mc12106, null)
-	mc12106.link(mc12105, null)
-	mc12105.link(mc12104, null)
-	mc12104.link(mc12103, null)
-	mc12103.link(mc12101, null)
-	mc12101.link(mc12006, null)
-	mc12006.link(mc12004, file("versions/mappings-1.20.6-to-1.20.4.txt"))
-	mc12004.link(mc12002, null)
-	mc12002.link(mc12001, null)
-	mc12001.link(mc11904, null)
-	mc11904.link(mc11903, null)
-	mc11903.link(mc11902, file("versions/mappings-1.19.3-to-1.19.2.txt"))
-	mc11902.link(mc11900, file("versions/mappings-1.19.2-to-1.19.txt"))
-	mc11900.link(mc11802, file("versions/mappings-1.19-to-1.18.2.txt"))
-	mc11802.link(mc11801, null)
-	mc11801.link(mc11701, null)
-	mc11701.link(mc11700, null)
-	mc11700.link(mc11605, file("versions/mappings-1.17-to-1.16.5.txt"))
-	mc11605.link(mc11603, null)
-	mc11603.link(mc11602, null)
-	mc11602.link(mc11502, null)
-	mc11502.link(mc11501, null)
-	mc11501.link(mc11500, null)
-	mc11500.link(mc11404, null)
+	mc12108.link(mc12101, file("versions/mappings-1.21.8-to-1.21.1.txt"))
 
 	for (final def node in getNodes()) {
 		findProject(node.project).ext.mcVersion = node.mcVersion

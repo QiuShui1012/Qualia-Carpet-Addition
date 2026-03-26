@@ -1,4 +1,0 @@
-classTweaker v1 named
-
-transitive-inject-interface net/minecraft/world/level/block/FlowerBlock com/qiushui1012/mod/qca/util/rule/FertilizableBlock
-transitive-inject-interface net/minecraft/world/phys/shapes/EntityCollisionContext com/qiushui1012/mod/qca/util/rule/EntityCollisionContextExtension

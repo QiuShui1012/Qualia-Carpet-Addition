@@ -71,18 +71,19 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: versions/${{ inputs.version }}/gradle.properties
-          properties: 'dependencies.minecraft_dependency dependencies.carpet_version actions.minecraft_version actions.java_version'
+          properties: 'dependencies.minecraft_dependency dependencies.rolling_gate_version actions.minecraft_version actions.neoforge_version actions.java_version'
 
       - name: Get Version
         id: version
         run: |
-          MESSAGE=$(ls ./versions/${{ inputs.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-fabric-|.jar' '{print $2}')
+          MESSAGE=$(ls ./versions/${{ inputs.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-neoforge-|.jar' '{print $2}')
           echo "version=$MESSAGE" >> $GITHUB_OUTPUT
+
       - name: Capture Build Artifacts
         uses: actions/upload-artifact@v7
         with:
           name: "${{ inputs.mod_name }} ${{ steps.version.outputs.version }}"
-          path: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
+          path: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
 
       - name: Setup Java ${{ steps.properties.outputs.actions-java_version }} For Game Test
         if: ${{ inputs.gametest }}
@@ -96,13 +97,13 @@ jobs:
         uses: Anvil-Dev/dedicated-server-launch-test@universal
         with:
           minecraft_version: '${{ steps.properties.outputs.actions-minecraft_version }}'
-          mod_loader: 'fabric'
-          loader_version: '0.18.4'
-          mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
+          mod_loader: 'neoforge'
+          loader_version: '${{ steps.properties.outputs.actions-neoforge_version }}'
+          mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
           maven-repos: |
-            https://masa.dy.fi/maven/
+            https://server.cjsah.net:1002/maven/
           maven-mods: |
-            carpet:fabric-carpet:${{ steps.properties.outputs.dependencies-carpet_version }}
+            dev.anvilcraft.rg:RollingGate:${{ steps.properties.outputs.dependencies-rolling_gate_version }}
           quiet-setup: True
 
       - name: Upload Release Jar
@@ -110,23 +111,22 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
 
       - name: Publish Mod
         if: ${{ inputs.publish }}
         uses: Kir-Antipov/mc-publish@v3.3
         continue-on-error: true
         with:
-          name: "${{ inputs.mod_name }} For Fabric v${{ steps.version.outputs.version }}"
+          name: "${{ inputs.mod_name }} For NeoForge Rolling Gate v${{ steps.version.outputs.version }}"
           version: ${{ steps.version.outputs.version }}
-          loaders: fabric
+          loaders: neoforge
           game-versions: ${{ steps.properties.outputs.dependencies-minecraft_dependency }}
           version-type: ${{ env.VERSION_TYPE }}
           fail-mode: skip
 
           dependencies: |
-            fabric-api@${{ steps.properties.outputs.dependencies-fabric_api_version }}(required){modrinth:P7dR8mSH}{curseforge:306612}
-            carpet@${{ steps.properties.outputs.dependencies-carpet_version }}(required){modrinth:TQTTVgYE}{curseforge:349239}
+            rolling_gate@${{ steps.properties.outputs.dependencies-rolling_gate_version }}(required){modrinth:HXsmHiKu}{curseforge:1194894}
 
           modrinth-id: JyI4tI00
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -136,5 +136,5 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           files: |
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
-            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}-sources.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
+            versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}-sources.jar

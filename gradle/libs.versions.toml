@@ -1,22 +1,12 @@
 [versions]
 
-# Enviroment Properties
-javax = "3.0.2"
-fabric-loader = "0.18.4"
-
 # Gradle Plugin Properties
-fabric-loom = "1.15-SNAPSHOT"
+architectury-loom = "1.13-SNAPSHOT"
 preprocessor = "c5abb4fb12"
 lombok = "9.2.0"
 
-[libraries]
-
-javax = { group = "com.google.code.findbugs", name = "jsr305", version.ref = "javax" }
-fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
-
 [plugins]
 
-fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }
-fabric-loom-remap = { id = "net.fabricmc.fabric-loom-remap", version.ref = "fabric-loom" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
 preprocessor = { id = "com.replaymod.preprocess", version.ref = "preprocessor" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
