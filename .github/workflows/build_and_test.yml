@@ -102,7 +102,7 @@ jobs:
         with:
           minecraft_version: '${{ steps.properties.outputs.actions-minecraft_version }}'
           mod_loader: 'fabric'
-          loader_version: '0.18.4'
+          loader_version: '0.19.3'
           mods: versions/${{ inputs.version }}/build/libs/${{ inputs.mod_id }}-fabric-${{ steps.version.outputs.version }}.jar
           maven-repos: |
             https://masa.dy.fi/maven/
