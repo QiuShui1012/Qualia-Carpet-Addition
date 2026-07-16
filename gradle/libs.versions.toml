@@ -2,7 +2,7 @@
 
 # Enviroment Properties
 javax = "3.0.2"
-fabric-loader = "0.18.4"
+fabric-loader = "0.19.3"
 
 # Gradle Plugin Properties
 fabric-loom = "1.15-SNAPSHOT"

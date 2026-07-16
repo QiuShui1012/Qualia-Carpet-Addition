@@ -4,7 +4,11 @@ import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Validator;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.commands.CommandSourceStack;
+//#if MC >= 26_01_00
 import org.jspecify.annotations.Nullable;
+//#else
+//$$ import javax.annotation.Nullable;
+//#endif
 
 import java.util.Arrays;
 import java.util.Set;
