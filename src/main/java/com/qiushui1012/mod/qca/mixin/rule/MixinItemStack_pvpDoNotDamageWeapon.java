@@ -90,13 +90,13 @@ public abstract class MixinItemStack_pvpDoNotDamageWeapon {
         LivingEntity attacker,
         EquipmentSlot equipmentSlot,
         Operation<Void> original,
-        @Local(ordinal = 0, argsOnly = true) LivingEntity target
+        @Local(ordinal = 0, argsOnly = true) LivingEntity mob
     ) {
         ItemStack cache = stack.copy();
         original.call(stack, i, attacker, equipmentSlot);
         if (
             QcaSettings.pvpDoNotDamageWeapon
-            && target instanceof Player && attacker instanceof Player
+            && mob instanceof Player && attacker instanceof Player
             && stack.getDamageValue() != cache.getDamageValue()
         ) {
             stack.setDamageValue(cache.getDamageValue());

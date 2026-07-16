@@ -8,6 +8,7 @@ plugins {
 preprocess {
 	strictExtraMappings = false
 
+	var mc260200 = createNode("26.2", 26_02_00, 'mojang')
 	var mc260100 = createNode("26.1", 26_01_00, 'mojang')
 	var mc12111 = createNode("1.21.11", 1_21_11, 'mojang')
 	var mc12110 = createNode("1.21.10", 1_21_10, 'mojang')
@@ -37,6 +38,7 @@ preprocess {
 	var mc11500 = createNode("1.15", 1_15_00, 'mojang')
 	var mc11404 = createNode("1.14.4", 1_14_04, 'mojang')
 
+	mc260200.link(mc260100, null)
 	mc260100.link(mc12111, null)
 	mc12111.link(mc12110, file("versions/mappings-1.21.11-to-1.21.10.txt"))
 	mc12110.link(mc12108, null)

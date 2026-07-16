@@ -4,11 +4,10 @@ import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Validator;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.commands.CommandSourceStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class QcaValidators {
     public static class PlantTransform extends Validator<String> {
@@ -21,9 +20,9 @@ public class QcaValidators {
         }
 
         @Override
-        public String validate(@Nullable CommandSourceStack source, CarpetRule<String> carpetRule, String newValue, String userInput) {
+        public @Nullable String validate(@Nullable CommandSourceStack source, CarpetRule<String> carpetRule, String newValue, String userInput) {
             String[] options = newValue.trim().split(",");
-            return !OPTIONS.containsAll(Arrays.stream(options).collect(Collectors.toList())) ? null : newValue;
+            return !OPTIONS.containsAll(Arrays.stream(options).toList()) ? null : newValue;
         }
 
         @Override

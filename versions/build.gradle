@@ -75,21 +75,14 @@ base {
 }
 
 java {
-    if (mcVersion > 26_00_00) {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
-    } else if (mcVersion > 1_20_05) {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    } else if (mcVersion > 1_17_01) {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    } else if (mcVersion > 1_16_05) {
-        sourceCompatibility = JavaVersion.VERSION_16
-        targetCompatibility = JavaVersion.VERSION_16
-    } else {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(
+            mcVersion >= 26_01_00 ? 25 :
+            mcVersion >= 1_20_05 ? 21 :
+            mcVersion >= 1_18_00 ? 17 :
+            mcVersion >= 1_17_00 ? 16 :
+            8
+        )
     }
 
     withSourcesJar()
@@ -162,7 +155,6 @@ tasks.named("assemble").configure {
 
 tasks.withType(JavaCompile).configureEach { JavaCompile task ->
     task.options.encoding = "UTF-8"
-    task.options.release.set(java.targetCompatibility.ordinal() + 1)
 }
 
 // Setup server default settings.

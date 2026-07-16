@@ -4,7 +4,7 @@
 //$$ @MethodsReturnNonnullByDefault
 //$$ @ParametersAreNonnullByDefault
 //#endif
-package com.qiushui1012.mod.qca.mixin.rule;
+package com.qiushui1012.mod.qca;
 
 //#if MC >= 26_01_00
 import org.jspecify.annotations.NullMarked;
