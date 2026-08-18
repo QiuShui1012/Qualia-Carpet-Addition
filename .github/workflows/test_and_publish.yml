@@ -76,7 +76,7 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: versions/${{ matrix.version }}/gradle.properties
-          properties: 'dependencies.minecraft_dependency action.minecraft_version action.loader_version action.java_version action.extra_mods'
+          properties: 'dependencies.minecraft_dependency dependencies.rolling_gate_version action.minecraft_version action.loader_version action.java_version action.extra_mods'
 
       - name: Setup Java ${{ steps.properties.outputs.action-java_version }}
         uses: actions/setup-java@v5.5.0
@@ -92,7 +92,10 @@ jobs:
           mod_loader: neoforge
           loader_version: '${{ steps.properties.outputs.action-loader_version }}'
           mods: versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
-          extra-mods: '${{ steps.properties.outputs.action-extra_mods }}'
+          maven-repos: |
+            https://server.cjsah.net:1002/maven/
+          maven-mods: |
+            dev.anvilcraft.rg:RollingGate:${{ steps.properties.outputs.dependencies-rolling_gate_version }}
           quiet-setup: True
 
       - name: Upload Release Jar
