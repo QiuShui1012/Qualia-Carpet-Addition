@@ -101,7 +101,9 @@ processResources {
         ])
     }
 
-    from("${rootDir}/LICENSE")
+    from("${rootDir}/LICENSE") {
+        into "LICENSE_${project.parent.property("mod.id")}"
+    }
     from("${rootDir}/.idea/icon.png") {
         into("assets/${project.parent.property("mod.id")}")
     }
