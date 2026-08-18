@@ -91,7 +91,7 @@ jobs:
           minecraft_version: '${{ steps.properties.outputs.action-minecraft_version }}'
           mod_loader: '${{ steps.properties.outputs.action-mod_loader }}'
           loader_version: '${{ steps.properties.outputs.action-loader_version }}'
-          mods: versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
+          mods: versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
           extra-mods: '${{ steps.properties.outputs.action-extra_mods }}'
           quiet-setup: True
 
@@ -100,7 +100,7 @@ jobs:
         if: ${{ !inputs.ci_build && !inputs.pr_build }}
         with:
           files: |
-            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
+            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
 
       - name: Download Sources Jar
         uses: actions/download-artifact@v8
@@ -129,5 +129,5 @@ jobs:
           curseforge-token: ${{ secrets.curseforge_token }}
 
           files: |
-            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
-            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-${{ matrix.version }}-${{ steps.version.outputs.version }}-sources.jar
+            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-${{ steps.version.outputs.version }}.jar
+            versions/${{ matrix.version }}/build/libs/${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-${{ steps.version.outputs.version }}-sources.jar
