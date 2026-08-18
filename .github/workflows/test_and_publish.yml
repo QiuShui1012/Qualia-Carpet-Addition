@@ -68,7 +68,7 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          MESSAGE=$(ls ./versions/${{ matrix.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-${{ matrix.version }}-|.jar' '{print $2}')
+          MESSAGE=$(ls ./versions/${{ matrix.version }}/build/libs/* | grep sources.jar -v | awk -F '${{ inputs.mod_id }}-neo-rg-${{ matrix.version }}-|.jar' '{print $2}')
           echo "version=$MESSAGE" >> $GITHUB_OUTPUT
 
       - name: Read Properties
