@@ -1,0 +1,120 @@
+name: Build and Upload Artifacts
+on:
+  workflow_call:
+    inputs:
+      mod_id:
+        type: string
+        required: true
+      mod_name:
+        type: string
+        required: true
+      versions:
+        type: string
+        required: true
+      ci_build:
+        description: 'CI Build'
+        type: boolean
+        default: true
+      pr_build:
+        description: 'PR Build'
+        type: boolean
+        default: true
+    outputs:
+      mod_id:
+        value: ${{ inputs.mod_id }}
+      mod_name:
+        value: ${{ inputs.mod_name }}
+      versions:
+        value: ${{ inputs.versions }}
+
+jobs:
+  build:
+    name: Build Once to Make Cache
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      NOT_DEV: true
+      CI_BUILD: ${{ inputs.ci_build }}
+      PR_BUILD: ${{ inputs.pr_build }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Javas
+        uses: actions/setup-java@v5.5.0
+        with:
+          distribution: zulu
+          java-version: |
+            8
+            16
+            17
+            21
+            25
+          cache: 'gradle'
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: '${{ env.CI_BUILD }}'
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+  upload:
+    name: Upload ${{ matrix.version }} Artifacts
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJson(inputs.versions).versions }}
+    env:
+      NOT_DEV: true
+      CI_BUILD: ${{ inputs.ci_build }}
+      PR_BUILD: ${{ inputs.pr_build }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Javas
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: zulu
+          java-version: |
+            8
+            16
+            17
+            21
+            25
+          cache: 'gradle'
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ matrix.version }}:build
+
+      - name: Upload ${{ matrix.version }} Jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: "${{ inputs.mod_name }} ${{ matrix.version }} Jar"
+          path: |
+            versions/${{ matrix.version }}/build/libs/*.jar
+            !versions/${{ matrix.version }}/build/libs/*-sources.jar
+
+      - name: Upload ${{ matrix.version }} Sources Jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: "${{ inputs.mod_name }} ${{ matrix.version }} Sources Jar"
+          path: versions/${{ matrix.version }}/build/libs/*-sources.jar

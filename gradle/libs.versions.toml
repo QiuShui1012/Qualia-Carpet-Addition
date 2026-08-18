@@ -1,12 +1,13 @@
 [versions]
 
 # Gradle Plugin Properties
-architectury-loom = "1.13-SNAPSHOT"
-preprocessor = "c5abb4fb12"
+architectury-loom = "1.17-SNAPSHOT"
+preprocessor = "1bb95e0810"
 lombok = "9.2.0"
 
 [plugins]
 
-architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+architectury-loom-remap = { id = "dev.architectury.loom-remap", version.ref = "architectury-loom" }
+architectury-loom-noremap = { id = "dev.architectury.loom-no-remap", version.ref = "architectury-loom" }
 preprocessor = { id = "com.replaymod.preprocess", version.ref = "preprocessor" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }

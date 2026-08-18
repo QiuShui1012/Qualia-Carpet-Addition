@@ -1,4 +1,4 @@
 @NullMarked
-package com.qiushui1012.mod.qca.util.rule;
+package com.qiushui1012.mod.qca;
 
 import org.jspecify.annotations.NullMarked;

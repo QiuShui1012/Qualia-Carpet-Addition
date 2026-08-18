@@ -38,7 +38,7 @@ public class RuleEventListener {
         if (!stack.is(Items.SHEARS)) return;
 
         Level level = event.getLevel();
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
 
@@ -68,7 +68,7 @@ public class RuleEventListener {
         if (!QcaServerRules.fertilizableSmallFlowers) return;
 
         Level level = event.getLevel();
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
 

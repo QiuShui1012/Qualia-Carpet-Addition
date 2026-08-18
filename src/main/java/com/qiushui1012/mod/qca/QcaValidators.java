@@ -1,14 +1,13 @@
 package com.qiushui1012.mod.qca;
 
 import dev.anvilcraft.rg.api.RGValidator;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class QcaValidators {
     public static class TooExpensiveLevel extends RGValidator.IntegerValidator {
         @Override
-        public Map.@NotNull Entry<Integer, Integer> getRange() {
+        public Map.Entry<Integer, Integer> getRange() {
             return Map.entry(Integer.MIN_VALUE, Integer.MAX_VALUE);
         }
 

@@ -1,9 +1,11 @@
-name: Update Release Assets
+name: Upload Release Assets
 on:
-  workflow_dispatch:
   release:
     types:
       - published
+    branches:
+      - release/**
+      - dev/**
 
 jobs:
   setup:
@@ -11,20 +13,29 @@ jobs:
     uses: ./.github/workflows/setup.yml
 
   build:
-    name: Build Version ${{ matrix.version }}
-    permissions: write-all
+    name: Build and Upload
     needs: setup
-    strategy:
-      fail-fast: false
-      matrix:
-        version: ${{ fromJson(needs.setup.outputs.versions).versions }}
-    uses: ./.github/workflows/build_and_test.yml
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build_and_upload.yml
     with:
-      version: ${{ matrix.version }}
-      version_type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
-      ci_build: false
-      pr_build: false
       mod_id: "${{ needs.setup.outputs.mod_id }}"
       mod_name: "${{ needs.setup.outputs.mod_name }}"
-      publish: true
-    secrets: inherit
+      versions: "${{ needs.setup.outputs.versions }}"
+
+  test:
+    name: Test and Publish
+    needs: build
+    permissions:
+      contents: write
+    uses: ./.github/workflows/test_and_publish.yml
+    with:
+      mod_id: "${{ needs.build.outputs.mod_id }}"
+      mod_name: "${{ needs.build.outputs.mod_name }}"
+      versions: "${{ needs.build.outputs.versions }}"
+      version_type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+      build_type: 'release'
+      gametest: false
+    secrets:
+      curseforge_token: ${{ secrets.CURSEFORGE_TOKEN }}
+      modrinth_token: ${{ secrets.MODRINTH_TOKEN }}

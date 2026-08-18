@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +12,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+
+//#if MC < 1_21_10
+//$$ import net.minecraft.world.entity.LivingEntity;
+//#endif
 
 public class ShearUtil {
     public static void shearTallPlant(
@@ -52,10 +55,17 @@ public class ShearUtil {
             pos.getZ(),
             ShearUtil.copyWithCount(small.asItem().getDefaultInstance(), 2)
         ));
-        inHandItem.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+        inHandItem.hurtAndBreak(
+            1,
+            player,
+            //#if MC < 1_21_10
+            //$$ LivingEntity.getSlotForHand(hand)
+            //#else
+            hand.asEquipmentSlot()
+            //#endif
+        );
     }
 
-    //#if MC >= 11700
     public static void shearBigDripleaf(
         Level level,
         BlockPos pos,
@@ -77,9 +87,16 @@ public class ShearUtil {
             pos.getZ(),
             ShearUtil.copyWithCount(small.asItem().getDefaultInstance(), 1)
         ));
-        inHandItem.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+        inHandItem.hurtAndBreak(
+            1,
+            player,
+            //#if MC < 1_21_10
+            //$$ LivingEntity.getSlotForHand(hand)
+            //#else
+            hand.asEquipmentSlot()
+            //#endif
+        );
     }
-    //#endif
 
     private static ItemStack copyWithCount(ItemStack stack, int count) {
         ItemStack copied = stack.copy();
